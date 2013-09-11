@@ -1,7 +1,7 @@
 from yapsy.IPlugin import IPlugin
 
 class Algorithm1(IPlugin):
-     def _init_(self):
+    def _init_(self):
         self.probability = 0.5
         self.rightDecision = 0
         self.decision = 0
@@ -37,10 +37,10 @@ class Algorithm1(IPlugin):
     def calc(self, data):
         values = []
         for x in range(0, 9):
-            values.insert(x+1,data[x]['close']) 
+            values.insert(x,data[x]['close']) 
         m = self.linearGrowth(values)
         if m > 0:
-            return 1
+            return 1, 0.5
         elif m < 0:
-            return -1
-        return 0
+            return -1, 0.5
+        return 0, 0.5
