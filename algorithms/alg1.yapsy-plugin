@@ -1,0 +1,8 @@
+[Core]
+Name = Algorithm 1
+Module = alg1
+
+[Documentation]
+Author = Michael Schilonka
+Version = 0.1
+Description = My first plugin
