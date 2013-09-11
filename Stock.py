@@ -8,12 +8,6 @@ class Stock:
         self._quotes = self.__get_quotes()
         self._data = self.__get_data()
       
-    def __get_quotes(self):
-        return ysq.get_historical_prices(self._symbol, config.DAYSTART, date.today().isoformat())
-    
-    def __get_data(self):
-        return ysq.get_all(self._symbol)
-    
     '''
     Available features (key):
     fifty_two_week_low
@@ -40,6 +34,9 @@ class Stock:
     def get_info(self,key):
         return self._data.get(key)
     
+    def get_symbol(self):
+        return self._symbol
+    
     def get_close_prices(self, recent=None):
         if recent is None:
             return self.__iterate_data('Close')
@@ -63,6 +60,12 @@ class Stock:
         for day in sorted(self._quotes.keys()):
             result.append(float(self._quotes[day][att]))
         return result
+    
+    def __get_quotes(self):
+        return ysq.get_historical_prices(self._symbol, config.DAYSTART, date.today().isoformat())
+    
+    def __get_data(self):
+        return ysq.get_all(self._symbol)
     
     
     
