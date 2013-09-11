@@ -55,6 +55,20 @@ class Stock:
         else:
             return self.__iterate_data('Open')[-recent:]
     
+    def get_day_prices(self):
+        result = []
+        for day in sorted(self._quotes.keys()):
+            result.append({'close' : float(self._quotes[day]['Close']),
+                           'open' : float(self._quotes[day]['Open']),
+                           'high' : float(self._quotes[day]['High']),
+                           'low' : float(self._quotes[day]['Low'])})
+        return result
+    
+    def get_day_chunks(self):
+        result = self.get_day_prices()
+        for i in xrange(0, len(result), config.DELTA):
+            yield result[i:i+config.DELTA]
+    
     def __iterate_data(self, att):
         result = []
         for day in sorted(self._quotes.keys()):
