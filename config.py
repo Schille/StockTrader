@@ -1,6 +1,6 @@
 #Stock import settings 
 DAYSTART = '2010-01-01'
-STARTTRADE = 1
+STARTTRADE = 20
 DELTA =  10
 
 

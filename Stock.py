@@ -64,10 +64,15 @@ class Stock:
                            'low' : float(self._quotes[day]['Low'])})
         return result
     
-    def get_day_chunks(self):
+    def get_day_chunks(self, start, end = None):
         result = self.get_day_prices()
-        for i in xrange(0, len(result), config.DELTA):
-            yield result[i:i+config.DELTA]
+        if not end is None:
+            for i in xrange(start, config.DELTA * end, config.DELTA):
+                yield result[i:i+config.DELTA]
+        else:
+            for i in xrange(start, len(result), config.DELTA):
+                yield result[i:i+config.DELTA]
+                
     
     def __iterate_data(self, att):
         result = []

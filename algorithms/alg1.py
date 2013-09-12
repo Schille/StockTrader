@@ -36,7 +36,7 @@ class Algorithm1(IPlugin):
     
     def calc(self, data):
         values = []
-        for x in range(0, 9):
+        for x in range(0, len(data) - 1):
             values.insert(x,data[x]['close']) 
         m = self.linearGrowth(values)
         if m > 0:
