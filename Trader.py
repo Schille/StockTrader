@@ -11,8 +11,12 @@ class StockTrader():
         self._algmanager = AlgorithmManager()
         
     def learn(self):
-        for chunk in self._stock.get_day_chunks():
+        for chunk in self._stock.get_day_chunks(0, config.STARTTRADE):
             result = self._algmanager.execute_calc(chunk)
-            print(result)
-        
+
+    
+    def trade(self):
+        for chunk in self._stock.get_day_chunks(config.DELTA * config.STARTTRADE + 1):
+            result = self._algmanager.execute_calc(chunk)
+
         

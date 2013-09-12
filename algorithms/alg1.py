@@ -64,11 +64,10 @@ class Algorithm1(IPlugin):
         values = []
         history_object = {}
         
-        
-        
         for x in range(0, len(data)-1):
             values.insert(x+1,data[x]['close']) 
         history_object['last_value_old'] = data[len(data)-1]['close']
+
         m = self.linearGrowth(values)
         history_object['growth'] = m
         
