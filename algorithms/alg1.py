@@ -52,11 +52,11 @@ class Algorithm1(IPlugin):
         pos_growth_list = []
         neg_growth_list = []
         for x in range (0, len(self.history)-1):
-            if last_history_object['right_decision'] == last_history_object['decision']:
-                if last_history_object['right_decision'] == 1:
-                    pos_growth_list.append(last_history_object['growth'])
-                elif last_history_object['right_decision'] == -1:
-                    neg_growth_list.append(last_history_object['growth'])
+            if self.history[x]['right_decision'] == self.history[x]['decision']:
+                if self.history[x]['right_decision'] == 1:
+                    pos_growth_list.append(self.history[x]['growth'])
+                elif self.history[x]['right_decision'] == -1:
+                    neg_growth_list.append(self.history[x]['growth'])
         
         self.upper_border = self.average(pos_growth_list)
         self.lower_border = self.average(neg_growth_list)
@@ -81,6 +81,4 @@ class Algorithm1(IPlugin):
         
         self.history.append(history_object)
         
-        print('Upper: ' + str(self.upper_border))
-        print('Lower: ' + str(self.lower_border))
-        return history_object['decision'], 0.5
+        return history_object['decision']
