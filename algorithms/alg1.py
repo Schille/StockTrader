@@ -53,14 +53,15 @@ class Algorithm1(IPlugin):
         neg_growth_list = []
         counter = 0
         for x in range (0, len(self.history)-1):
-            if self.history[x]['right_decision'] == self.history[x]['decision']:
-                if self.history[x]['right_decision'] == 1:
+                if self.history[x]['growth'] > 0:
                     pos_growth_list.append(self.history[x]['growth'])
-                elif self.history[x]['right_decision'] == -1:
+                elif self.history[x]['growth'] < 0:
                     neg_growth_list.append(self.history[x]['growth'])
+                if self.history[x]['right_decision'] == self.history[x]['decision']:
+                    counter += 1
              
         if(len(self.history) > 0):
-            self.probability = float(len(pos_growth_list)+len(neg_growth_list))/len(self.history)
+            self.probability = float(counter)/len(self.history)
         self.upper_border = self.average(pos_growth_list)
         self.lower_border = self.average(neg_growth_list)
         
@@ -75,9 +76,9 @@ class Algorithm1(IPlugin):
         m = self.linearGrowth(values)
         history_object['growth'] = m
         
-        if m < self.upper_border:
+        if m > self.upper_border:
             history_object['decision'] = 1
-        elif m > self.lower_border:
+        elif m < self.lower_border:
             history_object['decision'] = -1
         else: 
             history_object['decision'] = 0
