@@ -47,7 +47,7 @@ class Stock:
         if recent is None:
             return self.__iterate_data('Adj Close')
         else:
-            return self.__iterate_data('Close')[-recent:]
+            return self.__iterate_data('Adj Close')[-recent:]
     
     def get_open_prices(self, recent=None):
         if recent is None:
