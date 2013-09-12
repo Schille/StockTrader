@@ -42,9 +42,11 @@ class Algorithm1(IPlugin):
         
         if len(self.history) != 0:
             last_history_object = self.history[len(self.history)-1]
-            if last_history_object['last_value_old'] < data[len(data)-1]['close']:
+            new_growth = (data[-1]['close'] - last_history_object['last_value_old'])/len(data)
+            
+            if last_history_object['growth'] > 0 and last_history_object['growth']/2 > new_growth:
                 last_history_object['right_decision'] = 1
-            elif last_history_object['last_value_old'] > data[len(data)-1]['close']:
+            elif last_history_object['growth'] < 0 and last_history_object['growth']/2 < new_growth:
                 last_history_object['right_decision'] = -1
             else:
                 last_history_object['right_decision'] = 0
