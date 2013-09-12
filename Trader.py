@@ -29,6 +29,12 @@ class StockTrader():
                 decision += score[score.keys()[0]][0] * score[score.keys()[0]][1]
                 v += score[score.keys()[0]][1]
             # weighted average
+            if v == 0:
+                print('== Run: ' + str(run) + ' ==' )
+                print('Stock Sold: ' + str(0) +  ' Bought: ' + str(0))
+                print('Stock count:' + str(stock_count))
+                print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
+                continue 
             decision = decision / v
             # decision must be between -1 and 1
             decision = 1 if decision > 1 else decision
