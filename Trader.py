@@ -30,9 +30,13 @@ class StockTrader():
             decision = 1 if decision > 1 else decision
             decision = -1 if decision < -1 else decision
             # buy share / sell share / hold share
-            if decision == 0:
-                break
             cur_stock = chunk[-1]['close'] 
+            if decision == 0:
+                print('== Run: ' + str(run) + ' ==' )
+                print('Stock Sold: ' + str(0) +  ' Bought: ' + str(0))
+                print('Stock count:' + str(stock_count))
+                print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
+                continue
             count_buy = 0
             count_sell = 0
             if decision > 0:
@@ -50,7 +54,7 @@ class StockTrader():
             print('== Run: ' + str(run) + ' ==' )
             print('Stock Sold: ' + str(count_sell) +  ' Bought: ' + str(count_buy))
             print('Stock count:' + str(stock_count))
-            print('Budget:' + str(nonstock_budget))
+            print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
                 
                 
                 

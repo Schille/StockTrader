@@ -72,13 +72,13 @@ class Algorithm1(IPlugin):
         m = self.linearGrowth(values)
         history_object['growth'] = m
         
-        if m > self.upper_border:
+        if m < self.upper_border:
             history_object['decision'] = 1
-        elif m < self.lower_border:
+        elif m > self.lower_border:
             history_object['decision'] = -1
         else: 
             history_object['decision'] = 0
         
         self.history.append(history_object)
         
-        return history_object['decision']
+        return history_object['decision'], 0.5
