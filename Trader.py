@@ -19,4 +19,4 @@ class StockTrader():
         for chunk in self._stock.get_day_chunks(config.DELTA * config.STARTTRADE + 1):
             result = self._algmanager.execute_calc(chunk)
 
-        
+    
