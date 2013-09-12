@@ -42,9 +42,9 @@ class Algorithm1(IPlugin):
         
         if len(self.history) != 0:
             last_history_object = self.history[len(self.history)-1]
-            if last_history_object['last_value_new'] < data[len(data)-1]['close']:
+            if last_history_object['last_value_old'] < data[len(data)-1]['close']:
                 last_history_object['right_decision'] = 1
-            elif last_history_object['last_value_new'] > data[len(data)-1]['close']:
+            elif last_history_object['last_value_old'] > data[len(data)-1]['close']:
                 last_history_object['right_decision'] = -1
             else:
                 last_history_object['right_decision'] = 0
@@ -80,4 +80,6 @@ class Algorithm1(IPlugin):
         
         self.history.append(history_object)
         
-        return history_object['decision']
+        print('Upper: ' + str(self.upper_border))
+        print('Lower: ' + str(self.lower_border))
+        return history_object['decision'], 0.5
