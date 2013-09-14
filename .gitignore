@@ -7,6 +7,8 @@ bin-release/
 .settings/
 *.png
 *.pyc
+index.htm
+js/
 .DS_Store
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
