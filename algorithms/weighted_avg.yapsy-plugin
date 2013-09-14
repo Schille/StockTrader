@@ -1,0 +1,8 @@
+[Core]
+Name = Weighted Average
+Module = weighted_avg
+
+[Documentation]
+Author = Joerg Woditschka
+Version = 0.1
+Description = Uses the weighted average of the close prices of a chunk to estimate whether to buy or sell.

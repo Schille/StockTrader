@@ -1,0 +1,8 @@
+[Core]
+Name = Arithmetic Average
+Module = arithmetic_avg
+
+[Documentation]
+Author = Joerg Woditschka
+Version = 0.1
+Description = Uses the arithmetic average of the close prices of a chunk to estimate whether to buy or sell.
