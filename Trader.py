@@ -2,6 +2,7 @@ import config
 from AlgorithmManager import AlgorithmManager
 from Stock import Stock
 import math
+import json
 
 
 class StockTrader():
@@ -20,10 +21,13 @@ class StockTrader():
         stock_count = 0
         run = 0
         nonstock_budget = budget
+        data = []
         for chunk in self._stock.get_day_chunks(config.DELTA * config.STARTTRADE + 1):
             run += 1
             decision = 0
             v = 0
+            point = {}
+            marker = {}
             result = self._algmanager.execute_calc(chunk)
             for score in result:
                 decision += score[score.keys()[0]][0] * score[score.keys()[0]][1]
@@ -42,11 +46,13 @@ class StockTrader():
             decision = -1 if decision < -1 else decision
             # buy share / sell share / hold share
             cur_stock = chunk[-1]['close'] 
+            print "------->FINAL DECISION: " + str(decision)
             if decision < 0.08 and decision > -0.08:
                 print('== Run: ' + str(run) + ' ==' )
                 print('Stock Sold: ' + str(0) +  ' Bought: ' + str(0))
                 print('Stock count:' + str(stock_count))
                 print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
+                print "----- I'M HERE -----"
                 continue
             count_buy = 0
             count_sell = 0
@@ -56,28 +62,29 @@ class StockTrader():
                 stock_count += count_buy
                 # how much cash remaining
                 nonstock_budget -= count_buy * cur_stock
+                point['decision'] = 'buy'
+                point['color'] = '#00FF00'
+                marker['fillColor'] = '#00FF00'
+                point['marker'] = marker
             elif decision < 0:
                 # how many shares to be sold
                 count_sell = math.floor(((stock_count * cur_stock) * math.fabs(decision)) / cur_stock)
                 stock_count -= count_sell
                 # how much cash remaining
                 nonstock_budget += count_sell * cur_stock
+                point['decision'] = 'sell'
+                point['color'] = '#FF0000'
+                marker['fillColor'] = '#FF0000'
+                point['marker'] = marker
+                
             print('== Run: ' + str(run) + ' ==' )
             print('Stock Sold: ' + str(count_sell) +  ' Bought: ' + str(count_buy))
             print('Stock count:' + str(stock_count))
             print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
+            point['y'] = chunk[-1]['close']
+            data.append(point)
+        
+        with open('data.json', 'w') as outfile:    
+            json.dump(data, outfile)        
                 
                 
-                
-                
-                
-                
-                 
-            
-            
-            
-
-            
-            
-
-    

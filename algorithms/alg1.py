@@ -6,8 +6,8 @@ class Algorithm1(IPlugin):
         self.rightDecision = 0
         self.decision = 0
         self.history = []
-        self.upper_border = 0
-        self.lower_border = 0
+        self.border = 0
+        self.counter = 0
     
     def average(self, values):
         if len(values) == 0:
@@ -26,50 +26,42 @@ class Algorithm1(IPlugin):
         return (value ** 2 + value) / 2
     
     def linearGrowth(self, values):
-        sumX = self.littleGauss(len(values))
-        sumY = 0
-        sumXY = 0
-        sumXsquare = 0
-        counter = 1
-        for y in values:
-            sumY += y
-            sumXY += counter * y
-            sumXsquare += counter ** 2
-            counter += 1
-        return (len(values) * sumXY - sumX * sumY) / (len(values) * sumXsquare - sumX ** 2)
-    
+        if (len(values) != 1):
+            sumX = self.littleGauss(len(values))
+            sumY = 0
+            sumXY = 0
+            sumXsquare = 0
+            counter = 1
+            for y in values:
+                sumY += y
+                sumXY += counter * y
+                sumXsquare += counter ** 2
+                counter += 1
+            return (len(values) * sumXY - sumX * sumY) / (len(values) * sumXsquare - sumX ** 2)
+        else:
+            return 0
     def calc(self, data):
         
         if len(self.history) != 0:
             last_history_object = self.history[len(self.history)-1]
-            new_growth = (data[-1]['close'] - last_history_object['last_value_old'])/len(data)
             
-            if last_history_object['growth'] > 0 and last_history_object['growth']/2 > new_growth:
+            if last_history_object['last_value_old'] < data[-1]['close']:
                 last_history_object['right_decision'] = 1
-            elif last_history_object['growth'] < 0 and last_history_object['growth']/2 < new_growth:
-                last_history_object['right_decision'] = -1
             else:
-                last_history_object['right_decision'] = 0
-                
-        pos_growth_list = []
-        neg_growth_list = []
-        counter = 0
-        for x in range (0, len(self.history)-1):
-                if self.history[x]['growth'] > 0:
-                    pos_growth_list.append(self.history[x]['growth'])
-                elif self.history[x]['growth'] < 0:
-                    neg_growth_list.append(self.history[x]['growth'])
-                if self.history[x]['right_decision'] == self.history[x]['decision']:
-                    counter += 1
-             
+                last_history_object['right_decision'] = -1
+            if last_history_object['right_decision'] == last_history_object['decision']:
+                self.counter += 1
+            else:
+                self.border += last_history_object['growth']
+                self.border = self.border/2
+
+       
+                   
         if(len(self.history) > 0):
-            self.probability = float(counter)/len(self.history)
-        self.upper_border = self.average(pos_growth_list)
-        self.lower_border = self.average(neg_growth_list)
+            self.probability = float(self.counter)/len(self.history)
         
         values = []
         history_object = {}
-
         
         for x in range(0, len(data)-1):
             values.insert(x+1,data[x]['close']) 
@@ -78,13 +70,12 @@ class Algorithm1(IPlugin):
         m = self.linearGrowth(values)
         history_object['growth'] = m
         
-        if m > self.upper_border:
-            history_object['decision'] = 1
-        elif m < self.lower_border:
+        if m > self.border:
             history_object['decision'] = -1
         else: 
-            history_object['decision'] = 0
+            history_object['decision'] = 1
         
         self.history.append(history_object)
-        print (str(self.probability))
+        print "Algo1 decision: " + str(history_object['decision']) 
+        print "Algo1:" + str(self.probability)
         return history_object['decision'], self.probability
