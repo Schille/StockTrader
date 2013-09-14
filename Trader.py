@@ -29,6 +29,7 @@ class StockTrader():
                 decision += score[score.keys()[0]][0] * score[score.keys()[0]][1]
                 v += score[score.keys()[0]][1]
             # weighted average
+           
             if v == 0:
                 print('== Run: ' + str(run) + ' ==' )
                 print('Stock Sold: ' + str(0) +  ' Bought: ' + str(0))
@@ -41,7 +42,7 @@ class StockTrader():
             decision = -1 if decision < -1 else decision
             # buy share / sell share / hold share
             cur_stock = chunk[-1]['close'] 
-            if decision < 0.2 and decision > -0.2:
+            if decision < 0.08 and decision > -0.08:
                 print('== Run: ' + str(run) + ' ==' )
                 print('Stock Sold: ' + str(0) +  ' Bought: ' + str(0))
                 print('Stock count:' + str(stock_count))
