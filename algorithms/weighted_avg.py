@@ -1,6 +1,6 @@
 from yapsy.IPlugin import IPlugin
 
-class SimpleAVG(IPlugin):
+class WeightedAVG(IPlugin):
     def __init__(self):
         self.probabilityCounter=0
         self.probability = 0.5
@@ -25,7 +25,6 @@ class SimpleAVG(IPlugin):
     def calc(self, data):
         
         values = []
-        historical_values= []
         history_object = {}
         
         for x in range(0, len(data)-1):

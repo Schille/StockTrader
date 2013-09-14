@@ -1,0 +1,8 @@
+[Core]
+Name = Simple Slope
+Module = simple_slope
+
+[Documentation]
+Author = Joerg Woditschka
+Version = 0.1
+Description = Buys when slope decreases and vice versa.

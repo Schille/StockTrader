@@ -1,6 +1,6 @@
 from yapsy.IPlugin import IPlugin
 
-class SimpleAVG(IPlugin):
+class SimpleSlope(IPlugin):
     def __init__(self):
         self.probabilityCounter=0
         self.probability = 0.5
@@ -9,15 +9,6 @@ class SimpleAVG(IPlugin):
         self.history = []
         self.border = 0
     
-    def average(self, values):
-        if len(values) == 0:
-            return 0
-        sum = 0
-        for e in values:
-            sum += e
-        average = sum / float(len(values))
-        return average
-    
     def calc(self, data):
         
         values = []
@@ -25,7 +16,7 @@ class SimpleAVG(IPlugin):
         
         for x in range(0, len(data)-1):
             values.insert(x+1,data[x]['close']) 
-        history_object['average'] = self.average(values)
+        history_object['slope'] = data[-1]['close']/data[0]['close']-1
         history_object['last_value_old'] = data[len(data)-1]['close']
         
         if len(self.history) != 0:
@@ -37,15 +28,10 @@ class SimpleAVG(IPlugin):
                 
             if last_history_object['right_decision'] == last_history_object['decision']:
                 self.probabilityCounter+=1
-            else:
-                self.border=(self.border+last_history_object['average'])/2
                 
-            self.probability = float(self.probabilityCounter)/len(self.history)      
-                
-        else:
-            self.border = history_object['average']
+            self.probability = float(self.probabilityCounter)/len(self.history)
         
-        if history_object['average'] < self.border:
+        if history_object['slope'] < 0:
             history_object['decision'] = 1
         else:
             history_object['decision'] = -1
@@ -53,7 +39,7 @@ class SimpleAVG(IPlugin):
         self.history.append(history_object)
         #print("border: "+str(self.border))
         #print("curravg: "+str(history_object['average']))
-        print("arith_decision: "+str(history_object['decision']))
-        print("avg-probability: "+str(self.probability))
+        print("slope_decision: "+str(history_object['decision']))
+        print("slope_probability: "+str(self.probability))
         #print("last_val: "+str(history_object['last_value_old']))
         return history_object['decision'], self.probability
