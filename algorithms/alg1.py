@@ -76,6 +76,6 @@ class Algorithm1(IPlugin):
             history_object['decision'] = 1
         
         self.history.append(history_object)
-        print "Algo1 decision: " + str(history_object['decision']) 
-        print "Algo1:" + str(self.probability)
+        print "Algo1 decision: " + str(history_object['decision'])
+        print("Algo1_probability: "+str(self.probability))
         return history_object['decision'], self.probability

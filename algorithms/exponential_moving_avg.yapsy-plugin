@@ -1,0 +1,8 @@
+[Core]
+Name = Exponential Moving Average
+Module = exponential_moving_avg
+
+[Documentation]
+Author = Joerg Woditschka
+Version = 0.1
+Description = Uses the exponential average of the close prices of a chunk to estimate whether to buy or sell.
