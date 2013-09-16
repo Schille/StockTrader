@@ -3,8 +3,6 @@ import os
 import time
 import urllib
 
-from simplejson import dumps as to_json
-from simplejson import loads as from_json
 
 from Trader_ui import start_gtk_thread
 from Trader_ui import launch_browser
@@ -45,15 +43,14 @@ def main():
 
         if msg == "got-a-click":
             clicks += 1
-            web_send('document.getElementById("messages").innerHTML = %s' %
-                     to_json('%d clicks so far' % clicks))
+            web_send('document.getElementById("messages").innerHTML = %s')
             # If you are using jQuery, you can do this instead:
             # web_send('$("#messages").text(%s)' %
             #          to_json('%d clicks so far' % clicks))
 
         if current_time - last_second >= 1.0:
-            web_send('document.getElementById("uptime-value").innerHTML = %s' %
-                     to_json('%d' % uptime_seconds))
+            web_send('document.getElementById("uptime-value").innerHTML = %s')
+                     
             # If you are using jQuery, you can do this instead:
             # web_send('$("#uptime-value").text(%s)'
             #        % to_json('%d' % uptime_seconds))
