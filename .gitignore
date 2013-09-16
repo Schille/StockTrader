@@ -7,7 +7,6 @@ bin-release/
 .settings/
 *.png
 *.pyc
-index.htm
 js/
 .DS_Store
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`

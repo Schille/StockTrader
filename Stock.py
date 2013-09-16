@@ -57,6 +57,7 @@ class Stock:
     
     def get_day_prices(self):
         result = []
+        print self._quotes
         for day in sorted(self._quotes.keys()):
             result.append({'close' : float(self._quotes[day]['Close']),
                            'open' : float(self._quotes[day]['Open']),

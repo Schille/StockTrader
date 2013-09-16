@@ -67,9 +67,10 @@ class StockTrader():
                 # how much cash remaining
                 nonstock_budget -= count_buy * cur_stock
                 point['decision'] = 'buy'
-                point['color'] = '#00FF00'
-                marker['fillColor'] = '#00FF00'
-                point['marker'] = marker
+                point['color'] = '#0F0'
+                marker['fillColor'] = '#00bd1f' if count_buy != 0 else '#9D9'
+                marker['radius'] = 4 if count_buy != 0 else 3
+               
             elif decision < 0:
                 # how many shares to be sold
                 count_sell = math.floor(((stock_count * cur_stock) * math.fabs(decision)) / cur_stock)
@@ -77,20 +78,27 @@ class StockTrader():
                     self.noTradeCounter+=1
                 stock_count -= count_sell
                 # how much cash remaining
-                nonstock_budget += count_sell * cur_stock
+                nonstock_budget += count_sell * cur_stock 
                 point['decision'] = 'sell'
-                point['color'] = '#FF0000'
-                marker['fillColor'] = '#FF0000'
-                point['marker'] = marker
+                point['color'] = '#F00'
+                marker['fillColor'] = '#E33' if count_sell != 0 else '#D99'
+                marker['radius'] = 4 if count_sell != 0 else 3
                 
+            point['marker'] = marker    
             print('== Run: ' + str(run) + ' ==' )
             print('Stock Sold: ' + str(count_sell) +  ' Bought: ' + str(count_buy))
             print('Stock count:' + str(stock_count))
             print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
             point['y'] = chunk[-1]['close']
             data.append(point)
-        print("No Trade Chunks: "+str(self.noTradeCounter))
-        with open('data.json', 'w') as outfile:    
+        print("No Trade Chunks: "+str(self.noTradeCounter))   
+        metadata = {}
+        metadata['name'] = self._stock._symbol
+        
+        with open('data.js', 'w') as outfile:
+            outfile.write("var data = ")    
             json.dump(data, outfile)        
-                
-                
+            outfile.write(";var metadata = ")    
+            json.dump(metadata, outfile)
+            
+   
