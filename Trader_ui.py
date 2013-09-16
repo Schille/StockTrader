@@ -153,7 +153,7 @@ def launch_browser(uri, quit_function=None, echo=True):
 
     box.pack_start(browser, expand=True, fill=True, padding=0)
 
-    window.set_default_size(800, 600)
+    #window.set_default_size()
     window.show_all()
 
     message_queue = Queue.Queue()

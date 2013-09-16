@@ -2,6 +2,7 @@ import signal
 import os
 import time
 import urllib
+import simplejson
 
 
 from Trader_ui import start_gtk_thread
@@ -24,7 +25,7 @@ def main():
     file = os.path.abspath('index.htm')
     uri = 'file://' + urllib.pathname2url(file)
     browser, web_recv, web_send = \
-        synchronous_gtk_message(launch_browser)(uri,
+        asynchronous_gtk_message(launch_browser)(uri,
                                                 quit_function=Global.set_quit)
 
     # Finally, here is our personalized main loop, 100% friendly
@@ -38,7 +39,7 @@ def main():
         again = False
         msg = web_recv()
         if msg:
-            #msg = from_json(msg)
+            msg = from_json(msg)
             again = True
 
         if msg == "got-a-click":
