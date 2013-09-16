@@ -36,7 +36,44 @@ $(function() {
 				tooltip : {
 					valueDecimals : 2
 				}
-			}]
+			},budget_series],
+			
+			yAxis: [{ // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Value of Stock',
+                    style: {
+                        color: '#4572A7'
+                    }
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value +' $';
+                    },
+                    style: {
+                        color: '#4572A7'
+                    }
+                }
+    
+            },
+            { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Budget',
+                    style: {
+                        color: '#4572A7'
+                    }
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value +' Budget';
+                    },
+                    style: {
+                        color: '#4572A7'
+                    }
+                }
+    
+            },]
 		});
 
 });

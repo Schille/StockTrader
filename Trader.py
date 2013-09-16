@@ -23,7 +23,12 @@ class StockTrader():
         run = 0
         nonstock_budget = budget
         data = []
+        budget_series = {}
+        budget_data = []
+        budget_series['name'] = "Budget"
+        budget_series['color'] = "#FF0000"
         for chunk in self._stock.get_day_chunks(config.DELTA * config.STARTTRADE + 1):
+            budget_data.append(nonstock_budget)
             run += 1
             decision = 0
             v = 0
@@ -94,11 +99,16 @@ class StockTrader():
         print("No Trade Chunks: "+str(self.noTradeCounter))   
         metadata = {}
         metadata['name'] = self._stock._symbol
+        budget_series['data'] = budget_data
+        
+        budget_series['pointInterval'] =  24 * 3600 * 1000 * 5
         
         with open('data.js', 'w') as outfile:
             outfile.write("var data = ")    
             json.dump(data, outfile)        
             outfile.write(";var metadata = ")    
             json.dump(metadata, outfile)
+            outfile.write(";var budget_series = ")    
+            json.dump(budget_series, outfile)
             
    
