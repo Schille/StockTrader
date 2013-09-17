@@ -36,7 +36,15 @@ $(function() {
 				tooltip : {
 					valueDecimals : 2
 				}
-			}]
+			}],
+			//custom tooltip
+			tooltip: {
+			    formatter: function() {
+			            return ['<span style="font-size:10px">'+ Highcharts.dateFormat('%A, %B %e %Y, %H:%M:%S', this.x)+'</span><br>',
+					            '<span style="font-size:14px">Price</span>: <b>'+this.y+'</b>'
+					            ].join('');
+			    }
+			}
 		});
 
 });
