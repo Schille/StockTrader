@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+       "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="js/highstock.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+		<script src="js/modules/exporting.js"></script>
+</head>
+<body>
+
+<h1>StockTrader</h1>
+
+
+  <p>
+    <textarea cols="20" rows="1" id="in" name="symbol"></textarea>
+    <input type="button" name="Text 1" value="Show/Trade"
+      onclick="call_python(this,  document.getElementById('in').value)">
+  </p>
+
+<p id="out"></p>
+<div id="container" style="height: 500px; min-width: 500px"></div>
+
+<script>
+function call_python(myElement, myMessage){
+ document.title = myElement + '::' + myMessage;
+}
+
+function jscallback(msg) {
+drawchart(msg);	
+}
+
+function drawchart(msg) {
+		eval(msg)
+		var $container = $('#container');
+		chart1 = new Highcharts.StockChart({
+			chart:{
+				renderTo: $container[0]
+			},
+
+			rangeSelector : {
+				selected : 1
+			},
+			title : {
+				text : metadata.name,
+			},
+			
+			series : [{
+				name : metadata.name,
+				color : '#444',
+				data : data,
+				pointInterval: 24 * 3600 * 1000 * 5,
+                pointStart: Date.UTC(2010, 0, 01),
+				marker : {
+					enabled : true,
+					radius : 3
+				},
+				shadow : true,
+				tooltip : {
+					valueDecimals : 2
+				}
+			}]
+		})
+		
+};
+
+</script>
+
+</body>
+</html>
