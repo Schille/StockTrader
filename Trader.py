@@ -11,14 +11,15 @@ class StockTrader():
             raise Exception('Wrong argument exception: has to be instance of Stock')
         self._stock = stock
         self._algmanager = AlgorithmManager()
-        self.noTradeCounter=0
         
-    def learn(self):
-        for chunk in self._stock.get_day_chunks(0, config.STARTTRADE):
+    def learn(self, chunk_size, enddate):
+        for chunk in self._stock.get_day_chunks(chunk_size, self._stock.get_start_date()):
             result = self._algmanager.execute_calc(chunk)
 
+    def trade(self, enddate):
+        
     
-    def trade(self, budget):
+    def trade1(self, budget):
         stock_count = 0
         run = 0
         nonstock_budget = budget
@@ -53,16 +54,12 @@ class StockTrader():
                 print('Stock Sold: ' + str(0) +  ' Bought: ' + str(0))
                 print('Stock count:' + str(stock_count))
                 print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
-                print "----- I'M HERE -----"
-                self.noTradeCounter+=1
                 continue
             count_buy = 0
             count_sell = 0
             if decision > 0:
                 # how many shares to be bought
                 count_buy = math.floor((nonstock_budget * decision) / cur_stock)
-                if count_buy == 0:
-                    self.noTradeCounter+=1
                 stock_count += count_buy
                 # how much cash remaining
                 nonstock_budget -= count_buy * cur_stock
@@ -73,10 +70,8 @@ class StockTrader():
                
             elif decision < 0:
                 # how many shares to be sold
-                count_sell = math.floor(((stock_count * cur_stock) * math.fabs(decision)) / cur_stock)
-                if count_sell == 0:
-                    self.noTradeCounter+=1
-                stock_count -= count_sell
+                count_sell = math.floor(((stock_count * cur_stock) * math.fabs(decision)) / cur_stock) 
+                stock_count -= count_sell 
                 # how much cash remaining
                 nonstock_budget += count_sell * cur_stock 
                 point['decision'] = 'sell'
@@ -91,9 +86,9 @@ class StockTrader():
             print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
             point['y'] = chunk[-1]['close']
             data.append(point)
-        print("No Trade Chunks: "+str(self.noTradeCounter))   
         metadata = {}
         metadata['name'] = self._stock._symbol
+        
         
         with open('data.js', 'w') as outfile:
             outfile.write("var data = ")    

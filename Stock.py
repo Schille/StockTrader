@@ -1,9 +1,10 @@
 import ystockquote as ysq
 import config
-from datetime import date
+import datetime
 
 class Stock:
-    def __init__(self, symbol):
+    def __init__(self, symbol, startdate):
+        self._startdate = startdate
         self._symbol = symbol
         self._quotes = self.__get_quotes()
         self._data = self.__get_data()
@@ -55,25 +56,29 @@ class Stock:
         else:
             return self.__iterate_data('Open')[-recent:]
     
-    def get_day_prices(self):
+    def get_day_prices(self, start_date=None, end_date=datetime.datetime.today()):
         result = []
-        print self._quotes
+        if start_date == None:
+            start_date = self._startdate
         for day in sorted(self._quotes.keys()):
-            result.append({'close' : float(self._quotes[day]['Close']),
-                           'open' : float(self._quotes[day]['Open']),
-                           'high' : float(self._quotes[day]['High']),
-                           'low' : float(self._quotes[day]['Low'])})
+            cur_date = datetime.datetime.strptime(day, '%Y-%m-%d')  
+            if start_date <= cur_date and cur_date <= end_date:
+                result.append({'close' : float(self._quotes[day]['Close']),
+                               'open' : float(self._quotes[day]['Open']),
+                               'high' : float(self._quotes[day]['High']),
+                               'low' : float(self._quotes[day]['Low']),
+                               'dateutc': int(datetime.datetime.strptime('2013-01-01', '%Y-%m-%d').strftime('%s'))*1000,
+                               'date' : day})
         return result
     
-    def get_day_chunks(self, start, end = None):
-        result = self.get_day_prices()
-        if not end is None:
-            for i in xrange(start, config.DELTA * end, config.DELTA):
-                yield result[i:i+config.DELTA]
-        else:
-            for i in xrange(start, len(result), config.DELTA):
-                yield result[i:i+config.DELTA]
+    def get_day_chunks(self, chunk_size, start_date, end_date):
+        result = self.get_day_prices(start_date, end_date)
+        for i in xrange(0, len(result), chunk_size):
+            yield result[i:i+chunk_size]
                 
+                
+    def get_start_date(self):
+        return self._startdate
     
     def __iterate_data(self, att):
         result = []
@@ -82,7 +87,7 @@ class Stock:
         return result
     
     def __get_quotes(self):
-        return ysq.get_historical_prices(self._symbol, config.DAYSTART, date.today().isoformat())
+        return ysq.get_historical_prices(self._symbol, self._startdate.isoformat(), datetime.datetime.today().isoformat())
     
     def __get_data(self):
         return ysq.get_all(self._symbol)
