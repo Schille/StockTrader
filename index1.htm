@@ -46,6 +46,16 @@ function drawchart(msg) {
 				text : metadata.name,
 			},
 			
+			//custom tooltip
+			tooltip: {
+			    formatter: function() {
+			            return ['<span style="font-size:10px">'+ Highcharts.dateFormat('%A, %B %e %Y, %H:%M:%S', this.x)+'</span><br>',
+					            '<span style="font-size:14px">Price</span>: <b>'+this.y+'</b><br>',
+					            '<span style="font-size:14px">Probability</span>: <b>'+this.points[0].point.probability+'%</b>'
+					            ].join('');
+			    }
+			},
+			
 			series : [{
 				name : metadata.name,
 				color : '#444',

@@ -84,6 +84,7 @@ class StockTrader():
                 marker['fillColor'] = '#E33' if count_sell != 0 else '#D99'
                 marker['radius'] = 4 if count_sell != 0 else 3
                 
+            point['probability'] = round(math.fabs(decision)*100, 2)
             point['marker'] = marker    
             print('== Run: ' + str(run) + ' ==' )
             print('Stock Sold: ' + str(count_sell) +  ' Bought: ' + str(count_buy))
