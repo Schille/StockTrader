@@ -31,7 +31,7 @@ class MasterTrader():
         uri = 'file://' + urllib.pathname2url(file)
         self.v.load_uri(uri)
         self.w.show_all()
-        #Gtk.main()
+        Gtk.main()
     
     def window_title_change(self, v, param):
         if not v.get_title():
@@ -58,7 +58,7 @@ class MasterTrader():
         try:
             stock = Stock(symbol, datetime.datetime.strptime(config.DAYSTART, '%Y-%m-%d'))
         except:
-            self.v.execute_script("add_stock(%s)" % "")
+            self.v.execute_script("add_stock(%s)" % json.dumps(""))
             return
             
         stock_trader = StockTrader(stock)
@@ -66,14 +66,15 @@ class MasterTrader():
         self.stock_traders[symbol] = {'symbol':symbol,'trader':stock_trader, 'stock_cnt':0}
         
         # Now, send a message back to JavaScript
-        self.v.execute_script("add_stock(%s)" % symbol)
+        self.v.execute_script("add_stock(%s)" % json.dumps(symbol))
         
     def rm_stock(self, symbol):
         if self.stock_traders.has_key(symbol):
+            print "debug"
             del self.stock_traders[symbol]
-            self.v.execute_script("rm_stock(%s)" % symbol)
+            self.v.execute_script("rm_stock(%s)" % json.dumps(symbol))
         else:
-            self.v.execute_script("rm_stock(%s)" % "")
+            self.v.execute_script("rm_stock(%s)" % json.dumps(""))
         
     def next(self):
         self.stock_budget=0
