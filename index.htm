@@ -9,11 +9,11 @@
 		<script type="text/javascript">
 $(function() {
 	
-
+		
 		// Create the chart
 		$('#container').highcharts('StockChart', {
 			
-
+			
 			rangeSelector : {
 				selected : 1
 			},
@@ -26,8 +26,9 @@ $(function() {
 				name : metadata.name,
 				color : '#444',
 				data : data,
-				pointInterval: 24 * 3600 * 1000 * 5,
-                pointStart: Date.UTC(2010, 0, 01),
+				index : 1,
+				
+               
 				marker : {
 					enabled : true,
 					radius : 3
@@ -37,12 +38,20 @@ $(function() {
 				tooltip : {
 					valueDecimals : 2
 				}
-			},budget_series],
-			
-			yAxis: [{ // Secondary yAxis
+			},
+			budget_series
+			],
+			xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                }
+            },
+			yAxis: [{ 
                 gridLineWidth: 0,
                 title: {
-                    text: 'Value of Stock',
+                    text: 'Budget',
                     style: {
                         color: '#4572A7'
                     }
@@ -60,22 +69,23 @@ $(function() {
             { // Secondary yAxis
                 gridLineWidth: 0,
                 title: {
-                    text: 'Budget',
+                    text: 'Values of Stock',
                     style: {
                         color: '#4572A7'
                     }
                 },
                 labels: {
                     formatter: function() {
-                        return this.value +' Budget';
+                        return this.value +' $';
                     },
                     style: {
                         color: '#4572A7'
                     }
-                }
+                },
+                opposite: true,
     
-            },]
-			}],
+            },],
+			
 			//custom tooltip
 			tooltip: {
 			    formatter: function() {
@@ -83,7 +93,10 @@ $(function() {
 					            '<span style="font-size:14px">Price</span>: <b>'+this.y+'</b>'
 					            ].join('');
 			    }
-			}
+			},
+			 rangeSelector: {
+			        selected: 5
+			    },
 		});
 
 });

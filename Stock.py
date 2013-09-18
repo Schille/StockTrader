@@ -1,6 +1,8 @@
 import ystockquote as ysq
 import config
 from datetime import date
+import calendar
+import time
 
 class Stock:
     def __init__(self, symbol):
@@ -57,12 +59,12 @@ class Stock:
     
     def get_day_prices(self):
         result = []
-        print self._quotes
         for day in sorted(self._quotes.keys()):
             result.append({'close' : float(self._quotes[day]['Close']),
                            'open' : float(self._quotes[day]['Open']),
                            'high' : float(self._quotes[day]['High']),
-                           'low' : float(self._quotes[day]['Low'])})
+                           'low' : float(self._quotes[day]['Low']),
+                           'date' : calendar.timegm(time.strptime(day, "%Y-%m-%d"))*1000})
         return result
     
     def get_day_chunks(self, start, end = None):

@@ -24,14 +24,17 @@ class StockTrader():
         nonstock_budget = budget
         data = []
         budget_series = {}
-        budget_data = []
+        budget_series['data'] = []
+       
         budget_series['name'] = "Budget"
-        budget_series['color'] = "#FF0000"
+        budget_series['color'] = "#DDD"
+        budget_series['type'] = 'area'
+        budget_series['index'] = 0
         for chunk in self._stock.get_day_chunks(config.DELTA * config.STARTTRADE + 1):
-            budget_data.append(nonstock_budget)
             run += 1
             decision = 0
             v = 0
+            point_budget = {}
             point = {}
             marker = {}
             result = self._algmanager.execute_calc(chunk)
@@ -52,6 +55,9 @@ class StockTrader():
             decision = -1 if decision < -1 else decision
             # buy share / sell share / hold share
             cur_stock = chunk[-1]['close'] 
+            
+            
+            
             print "------->FINAL DECISION: " + str(decision)
             if decision < 0.08 and decision > -0.08:
                 print('== Run: ' + str(run) + ' ==' )
@@ -88,20 +94,25 @@ class StockTrader():
                 point['color'] = '#F00'
                 marker['fillColor'] = '#E33' if count_sell != 0 else '#D99'
                 marker['radius'] = 4 if count_sell != 0 else 3
-                
+           
+            
+            
             point['marker'] = marker    
             print('== Run: ' + str(run) + ' ==' )
             print('Stock Sold: ' + str(count_sell) +  ' Bought: ' + str(count_buy))
             print('Stock count:' + str(stock_count))
             print('Budget:' + str(nonstock_budget + stock_count * cur_stock))
             point['y'] = chunk[-1]['close']
+            point['x'] = chunk[-1]['date']
+            point_budget['y'] = math.floor(nonstock_budget + stock_count * cur_stock)
+            point_budget['x'] = chunk[-1]['date']
             data.append(point)
+            budget_series['data'].append(point_budget)
         print("No Trade Chunks: "+str(self.noTradeCounter))   
         metadata = {}
         metadata['name'] = self._stock._symbol
-        budget_series['data'] = budget_data
         
-        budget_series['pointInterval'] =  24 * 3600 * 1000 * 5
+        
         
         with open('data.js', 'w') as outfile:
             outfile.write("var data = ")    
