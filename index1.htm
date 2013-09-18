@@ -104,23 +104,26 @@
 		function next(data) {
 			var container = document.getElementById('container');
 			if(container.innerHTML.length != 0) {
-				for (var i = 0; i < data.series.length; i++) {
-				   charts[data.series[i].symbol].get().series[0].addPoint([data.date,series[i].price],true, false, true);
+				var k = 0;
+				for (var i in data.series) {
+					
+				   charts[k].get().series[0].addPoint([data.date,data.series[i].price],true, false, true);
+				   k++;
 				}
 			}
 			else {
-				for (var i = 0; i < data.series.length; i++) {
+				for (var i in data.series) {
 				var div = document.createElement('div');
 				container.appendChild(div);
-				div.setAttribute("id", "container_"+data.series[i].symbol);
+				div.setAttribute("id", "container_"+i);
 				div.setAttribute("style", "height: 500px; min-width: 500px");
-				charts[data.series[i].symbol] = new Highcharts.StockChart({
+				charts[i] = new Highcharts.StockChart({
 					chart : {
 						renderTo : div
 					},
-					title : { text: data.series[i].symbol },
+					title : { text: i },
 					series : [{
-						name : data.series[i].symbol,
+						name : i,
 						color : '#444',
 						data : [{
 							x : data.date,
