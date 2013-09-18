@@ -67,7 +67,7 @@ class Stock:
                                'open' : float(self._quotes[day]['Open']),
                                'high' : float(self._quotes[day]['High']),
                                'low' : float(self._quotes[day]['Low']),
-                               'dateutc': int(datetime.datetime.strptime('2013-01-01', '%Y-%m-%d').strftime('%s'))*1000,
+                               'dateutc': int(datetime.datetime.strptime(day, '%Y-%m-%d').strftime('%s'))*1000,
                                'date' : day})
         return result
     
