@@ -75,8 +75,7 @@ class Stock:
         result = self.get_day_prices(start_date, end_date)
         for i in xrange(0, len(result), chunk_size):
             yield result[i:i+chunk_size]
-                
-                
+                            
     def get_start_date(self):
         return self._startdate
     
