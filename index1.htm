@@ -2,70 +2,242 @@
        "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		<script src="js/highstock.js"></script>
-		<script type="text/javascript" src="data.js"></script>
-		<script src="js/modules/exporting.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="js/highstock.js"></script>
+<script type="text/javascript" src="data.js"></script>
+<script src="js/modules/exporting.js"></script>
 </head>
 <body>
 
-<h1>StockTrader</h1>
+	<h1>StockTrader</h1>
 
 
-  <p>
-    <textarea cols="20" rows="1" id="in" name="symbol"></textarea>
-    <input type="button" name="Text 1" value="Show/Trade"
-      onclick="call_python(this,  document.getElementById('in').value)">
-  </p>
+	<p>
+		<label for="in">Stocksymbol:</label> <input type="text" id="in"
+			name="symbol"></input> <input type="button" name="Text 1"
+			value="Next"
+			onclick="call_python(this,  document.getElementById('in').value)">
+		<input type="button" name="Text 1" value=">>"
+			onclick="call_python(this,  document.getElementById('in').value)">
+		<input type="button" name="Text 1" value="Add Stock"
+			onclick="send_add_stock('add_stock',  document.getElementById('in').value)">
+		<input type="button" name="Text 1" value="Remove Stock"
+			onclick="send_rm_stock('rm_stock',  document.getElementById('in').value)">
+		<select name="stockList" id="stockList" size="10"></select>
+	</p>
 
-<p id="out"></p>
-<div id="container" style="height: 500px; min-width: 500px"></div>
+	<p id="out"></p>
+	<div id="container" style="height: 500px; min-width: 500px"></div>
 
-<script>
-function call_python(myElement, myMessage){
- document.title = myElement + '::' + myMessage;
-}
-
-function jscallback(msg) {
-drawchart(msg);	
-}
-
-function drawchart(msg) {
-		eval(msg)
-		var $container = $('#container');
-		chart1 = new Highcharts.StockChart({
-			chart:{
-				renderTo: $container[0]
-			},
-
-			rangeSelector : {
-				selected : 1
-			},
-			title : {
-				text : metadata.name,
-			},
-			
-			series : [{
-				name : metadata.name,
-				color : '#444',
-				data : data,
-				pointInterval: 24 * 3600 * 1000 * 5,
-                pointStart: Date.UTC(2010, 0, 01),
-				marker : {
-					enabled : true,
-					radius : 3
-				},
-				shadow : true,
-				tooltip : {
-					valueDecimals : 2
-				}
-			}]
-		})
+	<script>
+		charts = {};
 		
-};
+		function send_add_stock(myFunction, mySymbol) {
+			document.title = myFunction + '::' + mySymbol;
+		}
+		
+		function send_next() {
+			document.title = 'next';
+		}
+		
+		function send_rm_stock(myFunction) {
+			var myList = document.getElementById('stockList');
+				if(myList.selectedIndex != -1) {
+					var mySymbol = myList.options[myList.selectedIndex].text;
+					console.log(mySymbol);
+					document.title = myFunction + '::' + mySymbol;
+					rm_stock(mySymbol);
+				}
+				else
+					alert('Please choose a stock, before clicking remove.');
+			
+		}
+		
+		function rm_stock(mySymbol) {
+			if (mySymbol.length > 0) {
+				var myList = document.getElementById('stockList');
+				myList.options[myList.selectedIndex].remove();
+		
+			}
+			else {
+				var out = document.getElementById('out');
+				out.setAttribute("style", "color:red");
+				out.innerHTML="Seems something went wrong deleting the symbol!";
+			}
+		}
 
-</script>
+		function add_stock(mySymbol) {
+
+			if (mySymbol.length > 0) {
+
+				var selectList = document.getElementById('stockList')
+				var entry = document.createElement('option');
+				entry.text = mySymbol;
+				entry.value = 0;
+
+				selectList.add(entry);
+				var out = document.getElementById('out');
+				out.setAttribute("style", "color:red");
+				out.innerHTML=""
+			}
+			
+			else {
+				var out = document.getElementById('out');
+				out.setAttribute("style", "color:red");
+				out.innerHTML="Illegal Symbol!"
+			}
+			
+		}
+
+		function call_python(myElement, myMessage) {
+			document.title = myElement + '::' + myMessage;
+		}
+
+		function jscallback(msg) {
+			drawchart(msg);
+		}
+		
+		
+		
+		function next(data) {
+			var container = document.getElementById('container');
+			if(container.innerHTML.length != 0) {
+				for (var i = 0; i < data.series.length; i++) {
+				   charts[data.series[i].symbol].get().series[0].addPoint([data.date,series[i].price],true, false, true);
+				}
+			}
+			else {
+				for (var i = 0; i < data.series.length; i++) {
+				var div = document.createElement('div');
+				container.appendChild(div);
+				div.setAttribute("id", "container_"+data.series[i].symbol);
+				div.setAttribute("style", "height: 500px; min-width: 500px");
+				charts[data.series[i].symbol] = new Highcharts.StockChart({
+					chart : {
+						renderTo : div
+					},
+					title : { text: data.series[i].symbol },
+					series : [{
+						name : data.series[i].symbol,
+						color : '#444',
+						data : [{
+							x : data.date,
+							y : data.series[i].price,
+							marker : {
+								radius : data.series[i].marker.radius, 
+								fillColor : data.series[i].marker.fillColor,
+							},
+						},],
+						index : 1,
+						marker : {
+							enabled : true,
+							radius : 3,
+						},
+						yAxis : 1,
+						shadow : true,
+						tooltip : {
+							valueDecimals : 2
+						}
+					}],
+					xAxis: {
+		                type: 'datetime',
+		                dateTimeLabelFormats: { // don't display the dummy year
+		                    month: '%e. %b',
+		                    year: '%b'
+		                }
+		            },
+		            yAxis: [{ 
+		                gridLineWidth: 0,
+		                title: {
+		                    text: 'Budget',
+		                    style: {
+		                        color: '#4572A7'
+		                    }
+		                },
+		                labels: {
+		                    formatter: function() {
+		                        return this.value +' $';
+		                    },
+		                    style: {
+		                        color: '#4572A7'
+		                    }
+		                }
+		    
+		            },
+		            { // Secondary yAxis
+		                gridLineWidth: 0,
+		                title: {
+		                    text: 'Value of Stock',
+		                    style: {
+		                        color: '#4572A7'
+		                    }
+		                },
+		                labels: {
+		                    formatter: function() {
+		                        return this.value +' $';
+		                    },
+		                    style: {
+		                        color: '#4572A7'
+		                    }
+		                },
+		                opposite: true,
+		    
+		            },],
+					
+					//custom tooltip
+					tooltip: {
+					    formatter: function() {
+					            return ['<span style="font-size:10px">'+ Highcharts.dateFormat('%A, %B %e %Y, %H:%M:%S', this.x)+'</span><br>',
+							            '<span style="font-size:14px">Price</span>: <b>'+this.y+'</b>'
+							            ].join('');
+					    }
+					},
+					 rangeSelector: {
+					        selected: 5
+					    },
+				});
+				console.log('Done');
+				
+			}
+			}
+		}
+
+		function drawchart(msg) {
+			eval(msg)
+			var $container = $('#container');
+			chart1 = new Highcharts.StockChart({
+				chart : {
+					renderTo : $container[0]
+				},
+
+				rangeSelector : {
+					selected : 1
+				},
+				title : {
+					text : metadata.name,
+				},
+
+				series : [ {
+					name : metadata.name,
+					color : '#444',
+					data : data,
+					pointInterval : 24 * 3600 * 1000 * 5,
+					pointStart : Date.UTC(2010, 0, 01),
+					marker : {
+						enabled : true,
+						radius : 3
+					},
+					shadow : true,
+					tooltip : {
+						valueDecimals : 2
+					}
+				} ]
+			})
+
+		};
+	</script>
 
 </body>
 </html>
