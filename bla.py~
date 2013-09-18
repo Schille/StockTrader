@@ -1,4 +1,4 @@
-from gi.repository import Gtk,WebKit
+import gtk, webkit
 import json
 import os
 import urllib
@@ -6,9 +6,9 @@ from Trader import StockTrader
 from Stock import Stock
 
 
-w = Gtk.Window()
-v = WebKit.WebView()
-sw = Gtk.ScrolledWindow()
+w = pygtk.Window()
+v = webkit.WebView()
+sw = pygtk.ScrolledWindow()
 w.add(sw)
 sw.add(v)
 w.set_size_request(1000,800)
@@ -25,11 +25,12 @@ def window_title_change(v, param):
 	b.learn()
 	b.trade(10000)
         # Now, send a message back to JavaScript
-        return_message = "You chose '%s'. How interesting." % message
+        return_message = open('data.js','r').read()
         v.execute_script("jscallback(%s)" % json.dumps(return_message))
+
 v.connect("notify::title", window_title_change)
 file = os.path.abspath('index1.htm')
 uri = 'file://' + urllib.pathname2url(file)
 v.load_uri(uri)
 w.show_all()
-Gtk.main()
+pygtkmain()

@@ -1,6 +1,6 @@
 from Trader import StockTrader
 from Stock import Stock
-import demo
+#import demo
 
 a=Stock('IBM')
 b=StockTrader(a)
