@@ -34,6 +34,7 @@ class MasterTrader():
         Gtk.main()
     
     def window_title_change(self, v, param):
+        print v.get_title()
         if not v.get_title():
             return
         if v.get_title():

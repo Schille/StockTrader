@@ -17,7 +17,7 @@
 		<label for="in">Stocksymbol:</label> <input type="text" id="in"
 			name="symbol"></input> <input type="button" name="Text 1"
 			value="Next"
-			onclick="call_python(this,  document.getElementById('in').value)">
+			onclick="send_next()">
 		<input type="button" name="Text 1" value=">>"
 			onclick="call_python(this,  document.getElementById('in').value)">
 		<input type="button" name="Text 1" value="Add Stock"
@@ -38,7 +38,7 @@
 		}
 		
 		function send_next() {
-			document.title = 'next';
+			document.title = 'next::';
 		}
 		
 		function send_rm_stock(myFunction) {
