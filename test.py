@@ -1,9 +1,11 @@
-from Trader import StockTrader
-from Stock import Stock
-#import demo
+import master_trader
 
-a=Stock('O1E.F')
-b=StockTrader(a)
-b.learn()
-b.trade(10000)
-#demo.show_gui()
+m=master_trader.MasterTrader()
+
+#m.add_stock('GOOG')
+
+#print (str(m.stock_traders))
+
+#m.rm_stock('GOOG')
+
+#print (str(m.stock_traders))

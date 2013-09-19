@@ -1,4 +1,5 @@
 from yapsy.IPlugin import IPlugin
+from math_lib import MathLib
 
 class ExponentialMovingAVG(IPlugin):
     def __init__(self):
@@ -8,12 +9,6 @@ class ExponentialMovingAVG(IPlugin):
         self.history = []
         self.border = 0
     
-    def exponential_average(self, values, cnt, alpha):
-        if cnt>1:
-            return self.exponential_average(values, cnt-1, alpha)+alpha*(values[cnt-1]-self.exponential_average(values, cnt-1, alpha))
-        else:
-            return alpha*values[cnt-1]
-    
     def calc(self, data):
         
         values = []
@@ -21,7 +16,7 @@ class ExponentialMovingAVG(IPlugin):
         
         for x in range(0, len(data)-1):
             values.append(data[x]['close']) 
-        history_object['average'] = self.exponential_average(values, len(values), float(2)/(len(values)+1))
+        history_object['average'] = MathLib.exponential_average(values, len(values), float(2)/(len(values)+1))
         history_object['last_value_old'] = data[len(data)-1]['close']
         
         if len(self.history) != 0:

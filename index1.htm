@@ -6,7 +6,6 @@
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="js/highstock.js"></script>
-<script type="text/javascript" src="data.js"></script>
 <script src="js/modules/exporting.js"></script>
 </head>
 <body>
@@ -18,7 +17,7 @@
 		<label for="in">Stocksymbol:</label> <input type="text" id="in"
 			name="symbol"></input> <input type="button" name="Text 1"
 			value="Next"
-			onclick="call_python(this,  document.getElementById('in').value)">
+			onclick="send_next()">
 		<input type="button" name="Text 1" value=">>"
 			onclick="call_python(this,  document.getElementById('in').value)">
 		<input type="button" name="Text 1" value="Add Stock"
@@ -39,7 +38,11 @@
 		}
 		
 		function send_next() {
-			document.title = 'next';
+			if(document.title == 'next::'){
+				document.title = 'next::1';
+				return;
+			}
+			document.title = 'next::';
 		}
 		
 		function send_rm_stock(myFunction) {
@@ -58,7 +61,7 @@
 		function rm_stock(mySymbol) {
 			if (mySymbol.length > 0) {
 				var myList = document.getElementById('stockList');
-				myList.options[myList.selectedIndex].remove();
+				myList.options[myList.selectedIndex]=null;
 		
 			}
 			else {
@@ -102,6 +105,7 @@
 		
 		
 		function next(data) {
+			console.log(JSON.stringify(data))
 			var container = document.getElementById('container');
 			if(container.innerHTML.length != 0) {
 				var k = 0;

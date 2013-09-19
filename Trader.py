@@ -11,7 +11,7 @@ class StockTrader():
             raise Exception('Wrong argument exception: has to be instance of Stock')
         self._stock = stock
         self._algmanager = AlgorithmManager()
-        self._cur_date = self.exit_stock.get_start_date()
+        self._cur_date = self._stock.get_start_date()
         
     def learn(self, chunk_size, end_date):
         self._cur_date = end_date
@@ -35,4 +35,3 @@ class StockTrader():
         decision = decision / v
         probability = decision / len(result_set)
         return decision * probability
-   
