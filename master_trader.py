@@ -35,7 +35,7 @@ class MasterTrader():
         Gtk.main()
     
     def window_title_change(self, v, param):
-        print v.get_title()
+        print(v.get_title())
         if not v.get_title():
             return
         if v.get_title():
@@ -116,12 +116,10 @@ class MasterTrader():
             stock['stock_cnt'] = count_buy
             self.stock_budget+=stock['stock_cnt']*stock['price']
         
-        series['budget'] = self.budget+self.stock_budget
+        #series['budget'] = self.budget+self.stock_budget
         result['series'] = series
-        
         self.v.execute_script("next(%s)" % json.dumps(result))
-        
-        self.cur_date += datetime.timedelta(config.DELTA)
+        self.cur_date += datetime.timedelta(days=10) #WHY NOT config.DELTA!?
         
     def set_data(self, date, budget):
         self.budget = budget
