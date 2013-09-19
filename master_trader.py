@@ -107,6 +107,7 @@ class MasterTrader():
                 self.stock_budget+=self.stock_traders[k]['stock_cnt']*self.stock_traders[k]['price']
             
         for stock in buy_stocks:
+            print stock['decision']
             count_buy = math.floor((self.budget * (stock['decision'] / decision_sum)) / stock['price'])
             if count_buy == 0:
                 series[stock['symbol']]['marker']={'radius':3, 'fillColor':'#9D9'}
@@ -116,7 +117,7 @@ class MasterTrader():
             stock['stock_cnt'] = count_buy
             self.stock_budget+=stock['stock_cnt']*stock['price']
         
-        #series['budget'] = self.budget+self.stock_budget
+        series['budget'] = self.budget+self.stock_budget
         result['series'] = series
         self.v.execute_script("next(%s)" % json.dumps(result))
         self.cur_date += datetime.timedelta(days=10) #WHY NOT config.DELTA!?
