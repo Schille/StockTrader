@@ -117,7 +117,7 @@ class MasterTrader():
             stock['stock_cnt'] = count_buy
             self.stock_budget+=stock['stock_cnt']*stock['price']
         
-        #series['budget'] = self.budget+self.stock_budget
+        series['budget'] = self.budget+self.stock_budget
         result['series'] = series
         self.v.execute_script("next(%s)" % json.dumps(result))
         

@@ -105,11 +105,12 @@
 		
 		
 		function next(data) {
-			console.log(JSON.stringify(data))
 			var container = document.getElementById('container');
 			if(container.innerHTML.length != 0) {
 				var k = 0;
 				for (var i in data.series) {
+					if(i == "budget")
+						continue;
 				    var point = {
 				        x: data.date,
 				        y: data.series[i].price,
@@ -119,11 +120,14 @@
 				        },
 				    };
 				   charts[i].get().series[0].addPoint(point,true, false, true);
+				   charts[i].get().series[1].addPoint({x : data.date, y : data.series['budget']},true, false, true);
 				   k++;
 				}
 			}
 			else {
 				for (var i in data.series) {
+					if(i == 'budget')
+						continue;
 				var div = document.createElement('div');
 				container.appendChild(div);
 				div.setAttribute("id", "container_"+i);
@@ -146,7 +150,9 @@
 								radius : data.series[i].marker.radius, 
 								fillColor : data.series[i].marker.fillColor,
 							},
-						},],
+						},
+						
+						],
 						index : 1,
 						marker : {
 							enabled : true,
@@ -157,8 +163,30 @@
 						tooltip : {
 							valueDecimals : 2
 						}
-					}],
-					xAxis: {
+					},
+					{
+						name : "Budget",
+						color : '#EEE',
+						type : 'area',
+						data : [{
+							x : data.date,
+							y : data.series['budget'],
+						
+						},
+						
+						],
+						index : 0,
+						marker : {
+							enabled : true,
+							radius : 3,
+						},
+						yAxis : 0,
+						shadow : true,
+						tooltip : {
+							valueDecimals : 2
+						}
+					},
+					],xAxis: {
 		                type: 'datetime',
 		                dateTimeLabelFormats: { // don't display the dummy year
 		                    month: '%e. %b',
@@ -212,7 +240,7 @@
 					    }
 					},
 				});
-				console.log('Done');
+		
 				
 			}
 			}
