@@ -6,6 +6,7 @@ from Trader import StockTrader
 from Stock import Stock
 import config
 import datetime
+import math
 
 class MasterTrader():
     
@@ -96,7 +97,7 @@ class MasterTrader():
                 decision_sum += self.stock_traders[k]['decision']
             else:
                 series[k]['color']='#F00'
-                count_sell = math.floor(self.stock_traders[k]['stock_cnt'] * math.fabs(decision))
+                count_sell = math.floor(self.stock_traders[k]['stock_cnt'] * math.fabs(self.stock_traders[k]['decision']))
                 if count_sell == 0:
                     series[k]['marker']={'radius':3, 'fillColor':'#D99'}
                 else:
@@ -120,7 +121,7 @@ class MasterTrader():
         
         self.v.execute_script("next(%s)" % json.dumps(result))
         
-        self.date += datetime.timedelta(config.DELTA)
+        self.cur_date += datetime.timedelta(config.DELTA)
         
     def set_data(self, date, budget):
         self.budget = budget
