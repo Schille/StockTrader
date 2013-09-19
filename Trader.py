@@ -34,4 +34,4 @@ class StockTrader():
                 v += score[score.keys()[0]][1]
         decision = decision / v
         probability = decision / len(result_set)
-        return decision * probability
+        return decision * math.fabs(probability)

@@ -97,7 +97,7 @@ class MasterTrader():
                 decision_sum += self.stock_traders[k]['decision']
             else:
                 series[k]['color']='#F00'
-                count_sell = math.floor(self.stock_traders[k]['stock_cnt'] * math.fabs(decision))
+                count_sell = math.floor(self.stock_traders[k]['stock_cnt'] * math.fabs(self.stock_traders[k]['decision']))
                 if count_sell == 0:
                     series[k]['marker']={'radius':3, 'fillColor':'#D99'}
                 else:
