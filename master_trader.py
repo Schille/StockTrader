@@ -107,6 +107,7 @@ class MasterTrader():
                 self.stock_budget+=self.stock_traders[k]['stock_cnt']*self.stock_traders[k]['price']
             
         for stock in buy_stocks:
+            print stock['decision']
             count_buy = math.floor((self.budget * (stock['decision'] / decision_sum)) / stock['price'])
             if count_buy == 0:
                 series[stock['symbol']]['marker']={'radius':3, 'fillColor':'#9D9'}
