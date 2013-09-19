@@ -106,8 +106,15 @@
 			if(container.innerHTML.length != 0) {
 				var k = 0;
 				for (var i in data.series) {
-					
-				   charts[k].get().series[0].addPoint([data.date,data.series[i].price],true, false, true);
+				    var point = {
+				        x: data.date,
+				        y: date,data.series[i].price,
+				        marker: {
+				        	radius : data.series[i].marker.radius, 
+							fillColor : data.series[i].marker.fillColor,
+				        },
+				    };
+				   charts[k].get().series[0].addPoint(point,true, false, true);
 				   k++;
 				}
 			}
