@@ -130,9 +130,12 @@
 				div.setAttribute("style", "height: 500px; min-width: 500px");
 				charts[i] = new Highcharts.StockChart({
 					chart : {
-						renderTo : div
+						renderTo : div,
 					},
 					title : { text: i },
+					scrollbar : {enabled : false},
+					rangeSelector : {enabled : false},
+					navigator : {enabled : false},
 					series : [{
 						name : i,
 						color : '#444',
