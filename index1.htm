@@ -38,6 +38,10 @@
 		}
 		
 		function send_next() {
+			if(document.title == 'next::'){
+				document.title = 'next::1';
+				return;
+			}
 			document.title = 'next::';
 		}
 		
@@ -101,12 +105,13 @@
 		
 		
 		function next(data) {
+			console.log(JSON.stringify(data))
 			var container = document.getElementById('container');
 			if(container.innerHTML.length != 0) {
 				var k = 0;
 				for (var i in data.series) {
-					
-				   charts[k].get().series[0].addPoint([data.date,data.series[i].price],true, false, true);
+				   console.log(charts[i])
+				   charts[i].get().series[0].addPoint([data.date,data.series[i].price],true, false, true);
 				   k++;
 				}
 			}
