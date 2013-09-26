@@ -22,16 +22,26 @@ class StockTrader():
         period = self._stock.get_day_prices(self._cur_date, end_date)
         result = self._algmanager.execute_calc(period)
         self._cur_date = end_date
-        return self.__acc_alg_results(result),period[-1]['close']
+        return self.__acc_alg_results(result), period[-1]['close']
         
         
     def __acc_alg_results(self, result_set):
         decision = 0
         probability = 0
         v = 0
+        sum_buy = 0
+        cnt_buy = 0
+        sum_sell = 0
+        cnt_sell = 0
         for score in result_set:
-                decision += score[score.keys()[0]][0] * score[score.keys()[0]][1]
-                v += score[score.keys()[0]][1]
-        decision = decision / v
-        probability = v / len(result_set)
-        return decision * math.fabs(probability)
+            if score[score.keys()[0]][0] == 1:
+                sum_buy += score[score.keys()[0]][1]
+                cnt_buy += 1
+            elif score[score.keys()[0]][0] == -1:
+                sum_sell -= score[score.keys()[0]][1]
+                cnt_sell += 1
+                
+        if sum_buy >= math.fabs(sum_sell):
+            return (sum_buy+sum_sell)/cnt_buy
+        else:
+            return (sum_sell+sum_buy)/cnt_sell
