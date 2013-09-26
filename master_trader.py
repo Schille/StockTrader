@@ -1,4 +1,4 @@
-from gi.repository import Gtk, WebKit
+import gtk, webkit
 import json
 import os
 import urllib
@@ -11,8 +11,8 @@ import math
 class MasterTrader():
     
     def __init__(self):
-        self.w = Gtk.Window()
-        self.v = WebKit.WebView()
+        self.w = gtk.Window()
+        self.v = webkit.WebView()
         self.stock_traders = {}
         self.budget = 10000
         self.stock_budget = 0
@@ -22,26 +22,24 @@ class MasterTrader():
         
     
     def show_window(self):
-        self.sw = Gtk.ScrolledWindow()
+        self.sw = gtk.ScrolledWindow()
         self.w.add(self.sw)
         self.sw.add(self.v)
         self.w.set_size_request(1000, 800)
-        self.w.connect("destroy", lambda q: Gtk.main_quit())
+        self.w.connect("destroy", lambda q: gtk.main_quit())
         
-        self.v.connect("notify::title", self.window_title_change)
+        self.v.connect('title-changed', self.title_changed)
         file = os.path.abspath('index1.htm')
         uri = 'file://' + urllib.pathname2url(file)
         self.v.load_uri(uri)
         self.w.show_all()
-        Gtk.main()
+        gtk.main()
     
-    def window_title_change(self, v, param):
-        print(v.get_title())
-        if not v.get_title():
+    def title_changed(self, widget, frame, title):
+        if not title:
             return
-        if v.get_title():
-            func = v.get_title().split("::", 1)[0]
-            param = v.get_title().split("::", 1)[1]
+        func = title.split("::", 1)[0]
+        param = title.split("::", 1)[1]
         
         if func == "add_stock":
             self.add_stock(param)
@@ -55,6 +53,7 @@ class MasterTrader():
             self.set_data(date, budget)
         else:
             return
+
         
     def add_stock(self, symbol):
         stock = None
