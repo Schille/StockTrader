@@ -83,12 +83,13 @@ class MasterTrader():
         buy_stocks = []
         decision_sum = 0
         result = {'date':int(self.cur_date.strftime('%s')) * 1000}
-        # setting decisions and prices
         series = {}
         for k in self.stock_traders.keys():
             series[k] = {}
             self.stock_traders[k]['decision'], self.stock_traders[k]['price'] = self.stock_traders[k]['trader'].trade(self.cur_date)
-            series[k]['price'] = self.stock_traders[k]['price']
+            series[k]['price'] = self.stock_traders[k]['price']         
+            self.stock_traders[k]['old_stock_cnt']=self.stock_traders[k]['stock_cnt']
+            
             if self.stock_traders[k]['decision'] > 0:
                 series[k]['color']='#0F0'
                 self.budget += self.stock_traders[k]['price'] * self.stock_traders[k]['stock_cnt']
@@ -105,22 +106,33 @@ class MasterTrader():
                 self.budget += self.stock_traders[k]['price'] * count_sell
                 self.stock_traders[k]['stock_cnt'] -= count_sell
                 self.stock_budget+=self.stock_traders[k]['stock_cnt']*self.stock_traders[k]['price']
-            
+        
         for stock in buy_stocks:
             print stock['decision']
-            count_buy = math.floor((self.budget * (stock['decision'] / decision_sum)) / stock['price'])
-            if count_buy == 0:
+            print("BUDGET: "+str(self.budget))
+            print("STOCK_PRICE: "+str(stock['price']))
+            print("DECISION: "+str(stock['decision']))
+            print("DECISION_SUM: "+str(decision_sum))
+            count_buy = math.floor((self.budget * (stock['decision'] / decision_sum) * stock['decision']) / stock['price'])
+            print("count_buy "+str(stock['symbol'])+": "+str(count_buy))
+            if count_buy <= stock['old_stock_cnt']:
                 series[stock['symbol']]['marker']={'radius':3, 'fillColor':'#9D9'}
             else:
                 series[stock['symbol']]['marker']={'radius':4, 'fillColor':'#00bd1f'}
             self.budget -= count_buy * stock['price']
-            stock['stock_cnt'] = count_buy
+            stock['stock_cnt'] += count_buy
             self.stock_budget+=stock['stock_cnt']*stock['price']
+            decision_sum -= stock['decision']
+        
+        print("FINAL Decision: "+str(self.stock_traders[k]['decision']))
+        print("PRICE: "+str(self.stock_traders[k]['price']))
+        print("BUDGET: "+str(self.budget))
+        print("STOCK_BUDGET: "+str(self.stock_budget))
         
         series['budget'] = self.budget+self.stock_budget
         result['series'] = series
         self.v.execute_script("next(%s)" % json.dumps(result))
-        self.cur_date += datetime.timedelta(days=10) #WHY NOT config.DELTA!?
+        self.cur_date += datetime.timedelta(days=config.DELTA)
         
     def set_data(self, date, budget):
         self.budget = budget
