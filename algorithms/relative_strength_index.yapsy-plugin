@@ -1,6 +1,6 @@
 [Core]
 Name = Relative Strength Index
-Module = relative_strength_index
+Module = relative_strength_index!
 
 [Documentation]
 Author = Joerg Woditschka

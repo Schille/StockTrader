@@ -1,0 +1,8 @@
+[Core]
+Name = Advanced Slope
+Module = advanced_slope
+
+[Documentation]
+Author = Joerg Woditschka
+Version = 0.1
+Description = Buys when slope decreases and vice versa.

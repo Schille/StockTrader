@@ -41,7 +41,9 @@ class StockTrader():
                 sum_sell -= score[score.keys()[0]][1]
                 cnt_sell += 1
                 
-        if sum_buy >= math.fabs(sum_sell):
+        if sum_buy > math.fabs(sum_sell):
             return (sum_buy+sum_sell)/cnt_buy
-        else:
+        elif sum_buy < math.fabs(sum_sell):
             return (sum_sell+sum_buy)/cnt_sell
+        else:
+            return 0

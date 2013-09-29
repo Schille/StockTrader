@@ -1,6 +1,6 @@
 [Core]
 Name = Arithmetic Average
-Module = arithmetic_avg
+Module = arithmetic_avg!
 
 [Documentation]
 Author = Joerg Woditschka

@@ -1,6 +1,6 @@
 [Core]
 Name = Weighted Average
-Module = weighted_avg
+Module = weighted_avg!
 
 [Documentation]
 Author = Joerg Woditschka

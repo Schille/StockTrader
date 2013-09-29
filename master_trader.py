@@ -1,4 +1,4 @@
-import gtk, webkit
+from gi.repository import Gtk, WebKit
 import json
 import os
 import urllib
@@ -11,8 +11,8 @@ import math
 class MasterTrader():
     
     def __init__(self):
-        self.w = gtk.Window()
-        self.v = webkit.WebView()
+        self.w = Gtk.Window()
+        self.v = WebKit.WebView()
         self.stock_traders = {}
         self.budget = 10000
         self.stock_budget = 0
@@ -22,18 +22,18 @@ class MasterTrader():
         
     
     def show_window(self):
-        self.sw = gtk.ScrolledWindow()
+        self.sw = Gtk.ScrolledWindow()
         self.w.add(self.sw)
         self.sw.add(self.v)
         self.w.set_size_request(1000, 800)
-        self.w.connect("destroy", lambda q: gtk.main_quit())
+        self.w.connect("destroy", lambda q: Gtk.main_quit())
         
         self.v.connect('title-changed', self.title_changed)
         file = os.path.abspath('index1.htm')
         uri = 'file://' + urllib.pathname2url(file)
         self.v.load_uri(uri)
         self.w.show_all()
-        gtk.main()
+        Gtk.main()
     
     def title_changed(self, widget, frame, title):
         if not title:
@@ -79,6 +79,7 @@ class MasterTrader():
             self.v.execute_script("rm_stock(%s)" % json.dumps(""))
         
     def next(self):
+        print("=====NEXT=====")
         self.stock_budget = 0
         decision_sum = 0
         result = {'date':int(self.cur_date.strftime('%s')) * 1000}
@@ -108,7 +109,10 @@ class MasterTrader():
             print("DECISION_SUM: " + str(decision_sum))
             
             if self.stock_traders[k]['decision'] > self.border:
-                count_buy = math.floor((self.budget * (self.stock_traders[k]['decision'] / decision_sum) * max((self.stock_traders[k]['decision'] - 1), 0)) / self.stock_traders[k]['price'])
+                #estimation of count_buy for one or multiple stocks
+                count_buy = math.floor((float(self.budget) * (float(self.stock_traders[k]['decision']) / decision_sum) * (float(self.stock_traders[k]['decision'])/2)) / self.stock_traders[k]['price'])
+                print("buy_percentage: "+str((float(self.stock_traders[k]['decision']) / decision_sum) * (float(self.stock_traders[k]['decision'])/2)))
+                    
                 self.budget -= count_buy * self.stock_traders[k]['price']
                 self.stock_budget += count_buy * self.stock_traders[k]['price']
                 decision_sum -= self.stock_traders[k]['decision']

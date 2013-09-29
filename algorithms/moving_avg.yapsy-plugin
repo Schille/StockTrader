@@ -1,6 +1,6 @@
 [Core]
 Name = Moving Average
-Module = moving_avg
+Module = moving_avg!
 
 [Documentation]
 Author = Joerg Woditschka

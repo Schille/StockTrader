@@ -1,6 +1,6 @@
 [Core]
 Name = Simple Slope
-Module = simple_slope
+Module = simple_slope!
 
 [Documentation]
 Author = Joerg Woditschka
