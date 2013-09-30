@@ -117,24 +117,27 @@ class MasterTrader():
             
             if self.stock_traders[k]['decision'] > self.border:
                 #estimation of count_buy for one or multiple stocks
-                self.stock_traders[k]['percentage'] = (float(self.stock_traders[k]['decision']) / decision_sum) * (float(self.stock_traders[k]['decision'])/2)
-                count_buy = math.floor((float(self.budget) * self.stock_traders[k]['percentage']) / self.stock_traders[k]['price'])
-                print("buy_percentage: "+str(self.stock_traders[k]['percentage']))
+                series[k]['percentage'] = (float(self.stock_traders[k]['decision']) / decision_sum) * (float(self.stock_traders[k]['decision'])/2)
+                count_buy = math.floor((float(self.budget) * series[k]['percentage']) / self.stock_traders[k]['price'])
+                print("buy_percentage: "+str(series[k]['percentage']))
                     
                 self.budget -= count_buy * self.stock_traders[k]['price']
                 self.stock_budget += count_buy * self.stock_traders[k]['price']
                 decision_sum -= self.stock_traders[k]['decision']
             else:
                 count_buy = 0
+                series[k]['percentage']=0
+                
             self.stock_traders[k]['stock_cnt'] = count_buy
-            self.stock_traders[k]['stock_cnt_diff'] = self.stock_traders[k]['stock_cnt'] - self.stock_traders[k]['old_stock_cnt']
+            series[k]['stock_cnt'] = count_buy
+            series[k]['stock_cnt_diff'] = count_buy - self.stock_traders[k]['old_stock_cnt']
 
             # coloring points
             print("count_buy " + str(self.stock_traders[k]['symbol']) + ": " + str(count_buy))
-            if self.stock_traders[k]['stock_cnt_diff'] > 0:
+            if series[k]['stock_cnt_diff'] > 0:
                 series[k]['color'] = '#0F0'
                 series[k]['marker'] = {'radius':4, 'fillColor':'#00bd1f'}
-            elif self.stock_traders[k]['stock_cnt_diff'] < 0:
+            elif series[k]['stock_cnt_diff'] < 0:
                 series[k]['color'] = '#F00'
                 series[k]['marker'] = {'radius':4, 'fillColor':'#E33'}
             else:

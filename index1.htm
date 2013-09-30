@@ -139,13 +139,13 @@
 							fillColor : data.series[i].marker.fillColor,
 				        },
 				    };
-				   $("#"+i+"_details_per").text("Share "+ i + ": "+ data.series[i].percentage +" in %");
+				   $("#"+i+"_details_per").text("Share "+ i + ": "+ data.series[i].percentage*100 +" in %");
 				   if(data.series[i].stock_cnt_diff > 0)
-					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else if(data.series[i].stock_cnt_diff < 0)
-						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:red'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(-"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else
-						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].percentage +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
+						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
 					
 				   $("#"+i+"_details_share").text("Share "+ i + ": "+ data.series[i].percentage +" in %");
 				   charts[i].get().series[0].addPoint(point,true, false, true);
@@ -154,20 +154,23 @@
 				}
 			}
 			else {
+			
 				$("#out").append("<p id='budget_details'>Current Budget: "+ data.series['budget'] +"</p>");
 				for (var i in data.series) {
+				console.log(JSON.stringify(data.series[i]));
 					if(i == 'budget')
 						continue;
 				var div = document.createElement('div');
 				
-				$("#out").append("<p id='"+i+"_details_per'>Share "+ i + ": "+ data.series[i].percentage +" in %</p>");
+				if(i != "Total"){
+					$("#out").append("<p id='"+i+"_details_per'>Share "+ i + ": "+ data.series[i].percentage*100 +"%</p>");
 					if(data.series[i].stock_cnt_diff > 0)
-						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt+" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else if(data.series[i].stock_cnt_diff < 0)
-						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:red'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else
-						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].percentage +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
-					
+						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
+				}					
 					
 				container.appendChild(div);
 				div.setAttribute("id", "container_"+i);
