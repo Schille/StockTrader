@@ -12,26 +12,31 @@
 
 	<h1>StockTrader</h1>
 
-
-	<p>
+	<table>
+		<tr valign="top"> 
+		<td>
 		<label for="in">Stocksymbol:</label> <input type="text" id="in"
-			name="symbol"></input>
+			name="symbol"></input></td>
+			<td>
 			<input type="button" name="Text 1" value="Add Stock"
-			onclick="send_add_stock('add_stock',  document.getElementById('in').value)">
-			 <input type="button" name="Text 1"
+			onclick="send_add_stock('add_stock',  document.getElementById('in').value)"></td>
+			 <td><input type="button" name="Text 1"
 			value="Next"
-			onclick="send_next()">
-		<input type="button" name="pause" value="Pause"
-			onclick="pause()">
-		<input type="button" name="fast" value=">>"
-			onclick="fastforward()">
+			onclick="send_next()"></td>
+		<td><input type="button" name="pause" value="Pause"
+			onclick="pause()"></td>
+		<td><input type="button" name="fast" value=">>"
+			onclick="fastforward()"></td>
 		
-		<input type="button" name="Text 1" value="Remove Stock"
-			onclick="send_rm_stock('rm_stock',  document.getElementById('in').value)">
-		<select name="stockList" id="stockList" size="10"></select>
-	</p>
-
-	<p id="out"></p>
+		<td><input type="button" name="Text 1" value="Remove Stock"
+			onclick="send_rm_stock('rm_stock',  document.getElementById('in').value)"></td>
+		<td><select name="stockList" id="stockList" size="10"></select></td>
+	
+	<td>
+	<p id="out" style="margin-left: 20px;"></p></td>
+	</tr>
+	</table>
+	
 	<div id="container" style="height: 500px; min-width: 500px"></div>
 
 	<script>
@@ -120,10 +125,6 @@
 		
 		
 		function next(data) {
-			if(data.length = 0) {
-				clearInterval(call);
-				return;
-			}
 			var container = document.getElementById('container');
 			if(container.innerHTML.length != 0) {
 				var k = 0;
@@ -138,16 +139,36 @@
 							fillColor : data.series[i].marker.fillColor,
 				        },
 				    };
+				   $("#"+i+"_details_per").text("Share "+ i + ": "+ data.series[i].percentage +" in %");
+				   if(data.series[i].stock_cnt_diff > 0)
+					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					else if(data.series[i].stock_cnt_diff < 0)
+						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:red'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					else
+						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].percentage +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
+					
+				   $("#"+i+"_details_share").text("Share "+ i + ": "+ data.series[i].percentage +" in %");
 				   charts[i].get().series[0].addPoint(point,true, false, true);
 				   charts[i].get().series[1].addPoint({x : data.date, y : data.series['budget']},true, false, true);
 				   k++;
 				}
 			}
 			else {
+				$("#out").append("<p id='budget_details'>Current Budget: "+ data.series['budget'] +"</p>");
 				for (var i in data.series) {
 					if(i == 'budget')
 						continue;
 				var div = document.createElement('div');
+				
+				$("#out").append("<p id='"+i+"_details_per'>Share "+ i + ": "+ data.series[i].percentage +" in %</p>");
+					if(data.series[i].stock_cnt_diff > 0)
+						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					else if(data.series[i].stock_cnt_diff < 0)
+						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].percentage +" in stocks <font style='color:red'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					else
+						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].percentage +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
+					
+					
 				container.appendChild(div);
 				div.setAttribute("id", "container_"+i);
 				div.setAttribute("style", "height: 500px; min-width: 500px");
