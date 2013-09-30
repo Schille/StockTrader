@@ -32,11 +32,11 @@
 			onclick="send_rm_stock('rm_stock',  document.getElementById('in').value)"></td>
 		<td><select name="stockList" id="stockList" size="10"></select></td>
 	
-	<td>
-	<p id="out" style="margin-left: 20px;"></p></td>
+	<td><p id="info" style="margin-left: 20px;"></p>
+	</td>
 	</tr>
 	</table>
-	
+	<p id="out"></p>
 	<div id="container" style="height: 500px; min-width: 500px"></div>
 
 	<script>
@@ -139,15 +139,15 @@
 							fillColor : data.series[i].marker.fillColor,
 				        },
 				    };
-				   $("#"+i+"_details_per").text("Share "+ i + ": "+ data.series[i].percentage*100 +" in %");
+				   $("#"+i+"_details_per").text("Share "+ i + ": "+ data.series[i].percentage*100 +"%");
 				   if(data.series[i].stock_cnt_diff > 0)
 					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else if(data.series[i].stock_cnt_diff < 0)
-						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(-"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(-"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else
-						$("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
+					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
 					
-				   $("#"+i+"_details_share").text("Share "+ i + ": "+ data.series[i].percentage +" in %");
+				   $("#"+i+"_details_share").text("Share "+ i + ": "+ data.series[i].percentage +"%");
 				   charts[i].get().series[0].addPoint(point,true, false, true);
 				   charts[i].get().series[1].addPoint({x : data.date, y : data.series['budget']},true, false, true);
 				   k++;
@@ -155,7 +155,7 @@
 			}
 			else {
 			
-				$("#out").append("<p id='budget_details'>Current Budget: "+ data.series['budget'] +"</p>");
+				$("#info").append("<p id='budget_details'>Current Budget: "+ data.series['budget'] +"</p>");
 				for (var i in data.series) {
 				console.log(JSON.stringify(data.series[i]));
 					if(i == 'budget')
@@ -163,13 +163,13 @@
 				var div = document.createElement('div');
 				
 				if(i != "Total"){
-					$("#out").append("<p id='"+i+"_details_per'>Share "+ i + ": "+ data.series[i].percentage*100 +"%</p>");
+					$("#info").append("<p id='"+i+"_details_per'>Share "+ i + ": "+ data.series[i].percentage*100 +"%</p>");
 					if(data.series[i].stock_cnt_diff > 0)
-						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt+" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+						$("#info").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt+" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else if(data.series[i].stock_cnt_diff < 0)
-						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+						$("#info").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else
-						$("#out").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
+						$("#info").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
 				}					
 					
 				container.appendChild(div);
