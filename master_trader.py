@@ -15,10 +15,10 @@ class MasterTrader():
         self.v = WebKit.WebView()
         self.stock_traders = {}
         self.budget = 10000
+        self.total = self.budget
         self.stock_budget = 0
         self.cur_date = datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
         self.border = 0.5
-        self.last_sum = 1
         self.show_window()
         
     
@@ -66,7 +66,7 @@ class MasterTrader():
             
         stock_trader = StockTrader(stock)
         stock_trader.learn(config.DELTA, self.cur_date - datetime.timedelta(config.DELTA))
-        self.stock_traders[symbol] = {'symbol':symbol, 'trader':stock_trader, 'stock_cnt':0}
+        self.stock_traders[symbol] = {'symbol':symbol, 'trader':stock_trader, 'stock_cnt':0, 'last_price': 0}
         
         # Now, send a message back to JavaScript
         self.v.execute_script("add_stock(%s)" % json.dumps(symbol))
@@ -85,7 +85,7 @@ class MasterTrader():
         decision_sum = 0
         result = {'date':int(self.cur_date.strftime('%s')) * 1000}
         series = {}
-        sum = 0
+        total_change = 1
         
         # Phase 1: withdraw
         for k in self.stock_traders.keys():
@@ -102,8 +102,10 @@ class MasterTrader():
             if self.stock_traders[k]['decision'] > self.border:
                 decision_sum += self.stock_traders[k]['decision']
                 
-            #add value to sum
-            sum += self.stock_traders[k]['price']
+            #add change to total_change
+            if self.stock_traders[k]['last_price'] > 0:
+                total_change += (self.stock_traders[k]['price']/self.stock_traders[k]['last_price']-1)
+            self.stock_traders[k]['last_price']=self.stock_traders[k]['price']
         
         # phase 2: invest
         for k in self.stock_traders.keys():
@@ -115,8 +117,9 @@ class MasterTrader():
             
             if self.stock_traders[k]['decision'] > self.border:
                 #estimation of count_buy for one or multiple stocks
-                count_buy = math.floor((float(self.budget) * (float(self.stock_traders[k]['decision']) / decision_sum) * (float(self.stock_traders[k]['decision'])/2)) / self.stock_traders[k]['price'])
-                print("buy_percentage: "+str((float(self.stock_traders[k]['decision']) / decision_sum) * (float(self.stock_traders[k]['decision'])/2)))
+                self.stock_traders[k]['percentage'] = (float(self.stock_traders[k]['decision']) / decision_sum) * (float(self.stock_traders[k]['decision'])/2)
+                count_buy = math.floor((float(self.budget) * self.stock_traders[k]['percentage']) / self.stock_traders[k]['price'])
+                print("buy_percentage: "+str(self.stock_traders[k]['percentage']))
                     
                 self.budget -= count_buy * self.stock_traders[k]['price']
                 self.stock_budget += count_buy * self.stock_traders[k]['price']
@@ -124,13 +127,14 @@ class MasterTrader():
             else:
                 count_buy = 0
             self.stock_traders[k]['stock_cnt'] = count_buy
+            self.stock_traders[k]['stock_cnt_diff'] = self.stock_traders[k]['stock_cnt'] - self.stock_traders[k]['old_stock_cnt']
 
             # coloring points
             print("count_buy " + str(self.stock_traders[k]['symbol']) + ": " + str(count_buy))
-            if count_buy > self.stock_traders[k]['old_stock_cnt']:
+            if self.stock_traders[k]['stock_cnt_diff'] > 0:
                 series[k]['color'] = '#0F0'
                 series[k]['marker'] = {'radius':4, 'fillColor':'#00bd1f'}
-            elif count_buy < self.stock_traders[k]['old_stock_cnt']:
+            elif self.stock_traders[k]['stock_cnt_diff'] < 0:
                 series[k]['color'] = '#F00'
                 series[k]['marker'] = {'radius':4, 'fillColor':'#E33'}
             else:
@@ -140,10 +144,20 @@ class MasterTrader():
         print("BUDGET: " + str(self.budget))
         print("STOCK_BUDGET: " + str(self.stock_budget))
         
-        print("TOTAL_SLOPE: "+str(float(sum)/self.last_sum))
-        #store sum in last_sum variable
-        #series['0total'] = {"price":sum, 'color':'#555', 'marker': {'radius':4, 'fillColor':'#555'}}
-        self.last_sum=sum
+        #add Total series
+        self.total *= total_change
+        print("total: "+str(self.total))
+        print("total_change:"+str(total_change))
+        if total_change > 1:
+            total_color = '#0F0'
+            total_fillColor = '#00bd1f'
+        elif total_change < 1:
+            total_color = '#F00'
+            total_fillColor = '#E33'
+        else:
+            total_color = '#444'
+            total_fillColor = '#444'
+        series['Total'] = {"price":self.total, 'color':total_color, 'marker': {'radius':4, 'fillColor':total_fillColor}}
         
         series['budget'] = self.budget + self.stock_budget
         result['series'] = series
