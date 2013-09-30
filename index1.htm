@@ -141,11 +141,11 @@
 				    };
 				   $("#"+i+"_details_per").text("Share "+ i + ": "+ data.series[i].percentage*100 +"%");
 				   if(data.series[i].stock_cnt_diff > 0)
-					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					   $("#"+i+"_details_amount").html("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else if(data.series[i].stock_cnt_diff < 0)
-					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(-"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					   $("#"+i+"_details_amount").html("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(-"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else
-					   $("#"+i+"_details_amount").text("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
+					   $("#"+i+"_details_amount").html("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
 					
 				   $("#"+i+"_details_share").text("Share "+ i + ": "+ data.series[i].percentage +"%");
 				   charts[i].get().series[0].addPoint(point,true, false, true);
