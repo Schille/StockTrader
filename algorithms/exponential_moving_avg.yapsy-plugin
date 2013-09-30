@@ -1,6 +1,6 @@
 [Core]
 Name = Exponential Moving Average
-Module = exponential_moving_avg
+Module = exponential_moving_avg!
 
 [Documentation]
 Author = Joerg Woditschka

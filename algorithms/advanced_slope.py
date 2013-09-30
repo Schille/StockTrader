@@ -17,8 +17,6 @@ class SimpleSlope(IPlugin):
             last_history_object = self.history[len(self.history)-1]
             
             #setting slope
-            print("FIRST: "+str(last_history_object['last_value'])) 
-            print("LAST: "+str(history_object['last_value'])) 
             history_object['slope']=history_object['last_value']/last_history_object['last_value']-1
             
             if (history_object['slope'] > 0 and last_history_object['slope'] > 0) or (history_object['slope'] <= 0 and last_history_object['slope'] <= 0):
@@ -26,7 +24,6 @@ class SimpleSlope(IPlugin):
             else:
                 self.summand = self.summand_init
             
-        print("SLOPE: "+str(history_object['slope']))
         if history_object['slope'] < 0:
             self.decision = min(self.decision+self.summand, 1)
         else:
@@ -37,5 +34,4 @@ class SimpleSlope(IPlugin):
         self.history.append(history_object)
         print("adv_slope_decision: "+str(history_object['decision']))
         print("adv_slope_probability: "+str(self.probability))
-        #print("last_val: "+str(history_object['last_value']))
         return history_object['decision'], self.probability

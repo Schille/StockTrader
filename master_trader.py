@@ -18,6 +18,7 @@ class MasterTrader():
         self.stock_budget = 0
         self.cur_date = datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
         self.border = 0.5
+        self.last_sum = 1
         self.show_window()
         
     
@@ -84,13 +85,14 @@ class MasterTrader():
         decision_sum = 0
         result = {'date':int(self.cur_date.strftime('%s')) * 1000}
         series = {}
+        sum = 0
         
         # Phase 1: withdraw
         for k in self.stock_traders.keys():
             series[k] = {}
             self.stock_traders[k]['decision'], self.stock_traders[k]['price'] = self.stock_traders[k]['trader'].trade(self.cur_date)
             self.stock_traders[k]['decision'] += 1
-            series[k]['price'] = self.stock_traders[k]['price']         
+            series[k]['price'] = self.stock_traders[k]['price']    
             self.stock_traders[k]['old_stock_cnt'] = self.stock_traders[k]['stock_cnt']
             
             self.budget += self.stock_traders[k]['price'] * self.stock_traders[k]['stock_cnt']
@@ -99,7 +101,10 @@ class MasterTrader():
             # calc decision_sum
             if self.stock_traders[k]['decision'] > self.border:
                 decision_sum += self.stock_traders[k]['decision']
-            
+                
+            #add value to sum
+            sum += self.stock_traders[k]['price']
+        
         # phase 2: invest
         for k in self.stock_traders.keys():
             
@@ -134,6 +139,11 @@ class MasterTrader():
                    
         print("BUDGET: " + str(self.budget))
         print("STOCK_BUDGET: " + str(self.stock_budget))
+        
+        print("TOTAL_SLOPE: "+str(float(sum)/self.last_sum))
+        #store sum in last_sum variable
+        #series['0total'] = {"price":sum, 'color':'#555', 'marker': {'radius':4, 'fillColor':'#555'}}
+        self.last_sum=sum
         
         series['budget'] = self.budget + self.stock_budget
         result['series'] = series
