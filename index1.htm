@@ -19,7 +19,7 @@
 			value="Next"
 			onclick="send_next()">
 		<input type="button" name="Text 1" value=">>"
-			onclick="call_python(this,  document.getElementById('in').value)">
+			onclick="fastforward()">
 		<input type="button" name="Text 1" value="Add Stock"
 			onclick="send_add_stock('add_stock',  document.getElementById('in').value)">
 		<input type="button" name="Text 1" value="Remove Stock"
@@ -32,6 +32,11 @@
 
 	<script>
 		charts = {};
+		var call;
+		
+		function fastforward () {
+			call = setInterval(send_next,200);
+		}
 		
 		function send_add_stock(myFunction, mySymbol) {
 			document.title = myFunction + '::' + mySymbol;
@@ -105,6 +110,10 @@
 		
 		
 		function next(data) {
+			if(data.length = 0) {
+				clearInterval(call);
+				return;
+			}
 			var container = document.getElementById('container');
 			if(container.innerHTML.length != 0) {
 				var k = 0;
