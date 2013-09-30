@@ -15,13 +15,17 @@
 
 	<p>
 		<label for="in">Stocksymbol:</label> <input type="text" id="in"
-			name="symbol"></input> <input type="button" name="Text 1"
+			name="symbol"></input>
+			<input type="button" name="Text 1" value="Add Stock"
+			onclick="send_add_stock('add_stock',  document.getElementById('in').value)">
+			 <input type="button" name="Text 1"
 			value="Next"
 			onclick="send_next()">
-		<input type="button" name="Text 1" value=">>"
+		<input type="button" name="pause" value="Pause"
+			onclick="pause()">
+		<input type="button" name="fast" value=">>"
 			onclick="fastforward()">
-		<input type="button" name="Text 1" value="Add Stock"
-			onclick="send_add_stock('add_stock',  document.getElementById('in').value)">
+		
 		<input type="button" name="Text 1" value="Remove Stock"
 			onclick="send_rm_stock('rm_stock',  document.getElementById('in').value)">
 		<select name="stockList" id="stockList" size="10"></select>
@@ -33,6 +37,12 @@
 	<script>
 		charts = {};
 		var call;
+		
+		function pause () {
+			if(typeof call != 'undefined') {
+				clearInterval(call);
+			}
+		}
 		
 		function fastforward () {
 			call = setInterval(send_next,200);
