@@ -1,6 +1,6 @@
 [Core]
 Name = Advanced Slope
-Module = advanced_slope
+Module = advanced_slope!
 
 [Documentation]
 Author = Joerg Woditschka

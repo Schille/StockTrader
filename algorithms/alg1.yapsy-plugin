@@ -1,6 +1,6 @@
 [Core]
 Name = Simple_Linear_Regression
-Module = alg1!
+Module = alg1
 
 [Documentation]
 Author = Michael Schilonka

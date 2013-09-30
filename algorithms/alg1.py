@@ -18,10 +18,6 @@ class Algorithm1(IPlugin):
         average = sum / float(len(values))
         return average
     
-    def dataobject(self):
-        return [{'close' : 1}, {'close' : 2}, {'close' : 3}, {'close' : 4}, {'close' : 5}, {'close' : 6}, {'close' : 7}
-                , {'close' : 8}, {'close' : 9}, {'close' : 10}]
-    
     def littleGauss(self, value):
         return (value ** 2 + value) / 2
     
@@ -40,12 +36,12 @@ class Algorithm1(IPlugin):
             return (len(values) * sumXY - sumX * sumY) / (len(values) * sumXsquare - sumX ** 2)
         else:
             return 0
-    def calc(self, data):
         
+    def calc(self, data):
         if len(self.history) != 0:
             last_history_object = self.history[len(self.history)-1]
             
-            if last_history_object['last_value_old'] < data[-1]['close']:
+            if last_history_object['last_value'] < data[-1]['close']:
                 last_history_object['right_decision'] = 1
             else:
                 last_history_object['right_decision'] = -1
@@ -54,9 +50,7 @@ class Algorithm1(IPlugin):
             else:
                 self.border += last_history_object['growth']
                 self.border = self.border/2
-
-       
-                   
+ 
         if(len(self.history) > 0):
             self.probability = float(self.counter)/len(self.history)
         
@@ -64,8 +58,9 @@ class Algorithm1(IPlugin):
         history_object = {}
         
         for x in range(0, len(data)-1):
-            values.insert(x+1,data[x]['close']) 
-        history_object['last_value_old'] = data[len(data)-1]['close']
+            values.insert(x+1,data[x]['close'])
+             
+        history_object['last_value'] = data[len(data)-1]['close']
 
         m = self.linearGrowth(values)
         history_object['growth'] = m
