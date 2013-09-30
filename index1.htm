@@ -18,7 +18,7 @@
 		<label for="in">Stocksymbol:</label> <input type="text" id="in"
 			name="symbol"></input></td>
 			<td>
-			<input type="button" name="Text 1" value="Add Stock"
+			<input type="button" id="addStock" value="Add Stock"
 			onclick="send_add_stock('add_stock',  document.getElementById('in').value)"></td>
 			 <td><input type="button" name="Text 1"
 			value="Next"
@@ -42,6 +42,12 @@
 	<script>
 		charts = {};
 		var call;
+		
+		$("#in").keyup(function(event){
+		    if(event.keyCode == 13){
+		        $("#addStock").click();
+		    }
+		});
 		
 		function pause () {
 			if(typeof call != 'undefined') {
@@ -139,11 +145,12 @@
 							fillColor : data.series[i].marker.fillColor,
 				        },
 				    };
-				   $("#"+i+"_details_per").text("Share "+ i + ": "+ data.series[i].percentage*100 +"%");
+				   $("#budget_details_").html("Current Budget: "+ data.series['budget'] +"</p>");
+				   $("#"+i+"_details_per").text("Share "+ i + ": "+ Math.round(data.series[i].percentage*10000)/100 +"%");
 				   if(data.series[i].stock_cnt_diff > 0)
 					   $("#"+i+"_details_amount").html("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else if(data.series[i].stock_cnt_diff < 0)
-					   $("#"+i+"_details_amount").html("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>(-"+data.series[i].stock_cnt_diff+ ")</font></p>");
+					   $("#"+i+"_details_amount").html("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks <font style='color:red'>("+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else
 					   $("#"+i+"_details_amount").html("Share "+ i + ": "+ data.series[i].stock_cnt +" in stocks (+-"+ data.series[i].stock_cnt_diff + ")</p>");
 					
@@ -163,7 +170,7 @@
 				var div = document.createElement('div');
 				
 				if(i != "Total"){
-					$("#info").append("<p id='"+i+"_details_per'>Share "+ i + ": "+ data.series[i].percentage*100 +"%</p>");
+					$("#info").append("<p id='"+i+"_details_per'>Share "+ i + ": "+ Math.round(data.series[i].percentage*10000)/100 +"%</p>");
 					if(data.series[i].stock_cnt_diff > 0)
 						$("#info").append("<p id='"+i+"_details_amount'>Share "+ i + ": "+ data.series[i].stock_cnt+" in stocks <font style='color:green'>(+"+data.series[i].stock_cnt_diff+ ")</font></p>");
 					else if(data.series[i].stock_cnt_diff < 0)
