@@ -18,7 +18,7 @@
 		<label for="in">Stocksymbol:</label> <input type="text" id="in"
 			name="symbol"></input></td>
 			<td>
-			<input type="button" name="Text 1" value="Add Stock"
+			<input type="button" id="addStock" value="Add Stock"
 			onclick="send_add_stock('add_stock',  document.getElementById('in').value)"></td>
 			 <td><input type="button" name="Text 1"
 			value="Next"
@@ -42,6 +42,12 @@
 	<script>
 		charts = {};
 		var call;
+		
+		$("#in").keyup(function(event){
+		    if(event.keyCode == 13){
+		        $("#addStock").click();
+		    }
+		});
 		
 		function pause () {
 			if(typeof call != 'undefined') {
