@@ -1,0 +1,8 @@
+[Core]
+Name = Curvature
+Module = curvature
+
+[Documentation]
+Author = Michael Schilonka, Joerg Woditschka
+Version = 0.1
+Description = Algorithm using the slope and curvature of a graph.

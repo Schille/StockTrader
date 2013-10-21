@@ -85,7 +85,7 @@ class MasterTrader():
         decision_sum = 0
         result = {'date':int(self.cur_date.strftime('%s')) * 1000}
         series = {}
-        total_change = 1
+        total_change = 0
         
         # Phase 1: withdraw
         for k in self.stock_traders.keys():
@@ -104,7 +104,7 @@ class MasterTrader():
                 
             #add change to total_change
             if self.stock_traders[k]['last_price'] > 0:
-                total_change += (self.stock_traders[k]['price']/self.stock_traders[k]['last_price']-1)
+                total_change += (float(self.stock_traders[k]['price'])/self.stock_traders[k]['last_price'])-1
             self.stock_traders[k]['last_price']=self.stock_traders[k]['price']
         
         # phase 2: invest
@@ -148,7 +148,8 @@ class MasterTrader():
         print("STOCK_BUDGET: " + str(self.stock_budget))
         
         #add Total series
-        self.total *= total_change
+        total_change = (1+float(total_change)/len(self.stock_traders))
+        self.total = self.total * total_change
         print("total: "+str(self.total))
         print("total_change:"+str(total_change))
         if total_change > 1:
